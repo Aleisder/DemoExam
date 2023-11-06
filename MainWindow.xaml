@@ -7,25 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1240">
 
-    <Window.Resources>
-        
-        <Style x:Key="style1" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-        </Style>
-
-        <Style x:Key="btnStyle" TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="15" />
-                </Style>
-            </Style.Resources>
-            <Setter Property="Background" Value="#FFF2CC01" />
-            <Setter Property="FontSize" Value="21" />
-        </Style>
-        
-    </Window.Resources>
-    
     <Grid
         Background="#FF27295A">
 
@@ -42,29 +23,40 @@
 
                     <TextBlock
                         Text="Добро пожаловать!"
-                        FontSize="22"
-                        FontWeight="Bold"
+                        Style="{StaticResource title1}"
                         HorizontalAlignment="Center"
                         Margin="0 0 0 30"/>
 
                     <TextBlock
                         Text="Логин" 
-                        Style="{StaticResource style1}" />
+                        Style="{StaticResource title3}" />
 
                     <TextBox
-                        />
+                        x:Name="loginField"
+                        Style="{StaticResource textFieldStyle}"/>
 
                     <TextBlock
                         Text="Пароль"
-                        Style="{StaticResource style1}" />
+                        Style="{StaticResource title3}" />
 
                     <TextBox
-                        />
+                        x:Name="passwordField"
+                        Style="{StaticResource textFieldStyle}"/>
+
+                    <TextBlock 
+                        x:Name="errorText"
+                        Text="Неверный логин или пароль"
+                        HorizontalAlignment="Center"
+                        FontWeight="SemiBold"
+                        Foreground="Red"
+                        FontSize="15"
+                        Visibility="Hidden"/>
 
                     <Button
                         Margin="0 20 0 0"
                         Style="{StaticResource btnStyle}"
-                        Content="Войти"/>
+                        Content="Войти"
+                        Click="EnterButtonClick"/>
 
 
                     <Button

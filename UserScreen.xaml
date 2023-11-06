@@ -32,25 +32,26 @@
         <StackPanel>
 
             <Border 
-            CornerRadius="30"
-            Margin="40 40 40 0"
-            Height="150"
-            Padding="30"
-            Background="White">
+                CornerRadius="30"
+                Margin="40 40 40 0"
+                Height="150"
+                Padding="30"
+                Background="White">
 
                 <StackPanel
-                Orientation="Horizontal">
+                    Orientation="Horizontal">
 
                     <TextBlock
-                    Style="{StaticResource style1}"
-                    FontSize="25"
-                    Text="Иванов Иван Иванович"/>
+                        Style="{StaticResource style1}"
+                        FontSize="25"
+                        Text="Иванов Иван Иванович"/>
 
                     <Button 
-                    Style="{StaticResource btnStyle}"
-                    Margin="500 0 0 0"
-                    Width="200"
-                    Content="Подать заявку"/>
+                        Style="{StaticResource btnStyle}"
+                        Margin="500 0 0 0"
+                        Width="200"
+                        Content="Подать заявку"
+                        Click="MakeRequestButtonClick"/>
 
                 </StackPanel>
 
@@ -62,26 +63,96 @@
                 Margin="40 40 40 0">
 
                 <StackPanel>
-                                    <TextBlock 
-                    Text="Ваши заявки"
-                                        HorizontalAlignment="Center"
-                                        FontSize="30"/>
+                    <TextBlock 
+                        Text="Ваши заявки"
+                        HorizontalAlignment="Center"
+                        FontSize="30"/>
 
-                    <DataGrid>
-                        <DataGrid.Columns></DataGrid.Columns>
-                        
+                    <DataGrid
+                        x:Name="requestDataGrid">
                     </DataGrid>
+
                 </StackPanel>
 
 
-                
+
             </Border>
 
         </StackPanel>
 
-        
-   
-        
-        
+
+
+        <Grid
+            x:Name="gridRequest"
+            Background="#3F000000">
+
+            <Grid
+                 Width="500"
+                 Height="500">
+
+                <Border
+                    Padding="40"
+                    Background="White"
+                    CornerRadius="30">
+
+                    <StackPanel>
+
+                        <Button 
+                            Width="25"
+                            Height="25"
+                            Content="×"
+                            HorizontalAlignment="Right"
+                            Click="CloseRequestGridClick"/>
+
+                        <TextBlock 
+                            Text="Заполните заявку"
+                            Style="{StaticResource title1}"
+                            HorizontalAlignment="Center"/>
+
+                        <TextBlock
+                            Text="Укажите модель оборудования:"
+                            Margin="0 20 0 0"
+                            Style="{StaticResource title3}" />
+
+                        <TextBox 
+                            x:Name="modelField"
+                            Style="{StaticResource textFieldStyle}"/>
+
+                        <TextBlock
+                            Text="Укажите тип неисправности:"
+                            Margin="0 20 0 0"
+                            Style="{StaticResource title3}" />
+
+                        <TextBox 
+                            x:Name="typeField"
+                            Style="{StaticResource textFieldStyle}"/>
+
+                        <TextBlock
+                            Text="Опишите подробнее вашу проблему:"
+                            Margin="0 20 0 0"
+                            Style="{StaticResource title3}" />
+
+                        <TextBox 
+                            x:Name="descriptionField"
+                            Style="{StaticResource textFieldStyle}"/>
+
+                        <Button 
+                            Content="Отправить заявку"
+                            Style="{StaticResource btnStyle}"
+                            Margin="0 20 0 0"
+                            Click="SendRequestClick" />
+
+
+
+                    </StackPanel>
+
+                </Border>
+
+            </Grid>
+
+
+        </Grid>
+
+
     </Grid>
 </Window>
