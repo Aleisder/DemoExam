@@ -1,5 +1,6 @@
 ﻿using DemoExam.Model;
 using DemoExam.Repository;
+using DemoExam.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,10 +52,14 @@ namespace DemoExam
                         }
                     case Role.Manager:
                         {
+                            ManagerScreen managerScreen = new(user.Login);
+                            managerScreen.Show();
                             break;
                         }
                     case Role.Executor:
                         {
+                            ExecutorScreen executorScreen = new(user.Login);
+                            executorScreen.Show();
                             break;
                         }
                 }
