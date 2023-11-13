@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DemoExam.View"
         mc:Ignorable="d"
-        Title="ExecutorScreen" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="UserScreen" Height="720" Width="1240">
     <Grid>
         
     </Grid>

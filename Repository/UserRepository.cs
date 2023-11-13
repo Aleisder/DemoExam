@@ -12,9 +12,9 @@ namespace DemoExam.Repository
         public UserRepository() { }
 
         private readonly List<User> users = new() {
-            new User(0, "client", "client", Role.Client),
-            new User(1, "admin", "admin", Role.Manager),
-            new User(2, "executor", "executor", Role.Executor)
+            new User(0, "client", "Даниил", "Царенко", "client", Role.Client),
+            new User(1, "admin", "Райан", "Гослинг", "admin", Role.Manager),
+            new User(2, "executor", "executor", "фваы", "фва", Role.Executor)
         };
 
         public void AddUser(User user)
@@ -31,7 +31,7 @@ namespace DemoExam.Repository
         {
             using(var context = SqlServerContext)
             {
-                return context.Users.Any(it => it.Login == login && it.Password == password);
+                return users.Any(it => it.Login == login && it.Password == password);
             }
 
             //return users.Any(it => it.Login == login && it.Password == password);

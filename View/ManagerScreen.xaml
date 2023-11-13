@@ -5,8 +5,206 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DemoExam.View"
         mc:Ignorable="d"
-        Title="ManagerScreen" Height="450" Width="800">
-    <Grid>
-        
+        WindowStartupLocation="CenterScreen"
+        Title="UserScreen" Height="720" Width="1240">
+
+    <Window.Resources>
+
+        <Style x:Key="style1" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="btnStyle" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15" />
+                </Style>
+            </Style.Resources>
+            <Setter Property="Background" Value="#FFF2CC01" />
+            <Setter Property="FontSize" Value="21" />
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Background="#FF27295A">
+
+        <StackPanel>
+
+            <Border 
+                CornerRadius="30"
+                Margin="40 40 40 0"
+                Height="150"
+                Padding="30"
+                Background="White">
+
+                <StackPanel
+                    Orientation="Horizontal">
+
+                    <TextBlock
+                        x:Name="TextBlockUserName"
+                        Style="{StaticResource style1}"
+                        FontSize="25"
+                        Text="Иванов Иван Иванович"/>
+
+                    <Button 
+                        Style="{StaticResource btnStyle}"
+                        Margin="500 0 0 0"
+                        Width="200"
+                        Content="Подать заявку"/>
+
+                </StackPanel>
+
+            </Border>
+
+            <Border
+                Background="White"
+                Height="450"
+                Margin="40 40 40 0">
+
+                <StackPanel>
+                    <TextBlock 
+                        Text="Ваши заявки"
+                        HorizontalAlignment="Center"
+                        FontSize="30"/>
+
+                    <ScrollViewer
+                        Margin="10"
+                        Padding="20">
+
+                        <StackPanel>
+
+                            <ItemsControl
+                                 x:Name="RequestsListView"
+                                 ItemsSource="{Binding ManagerRequestListView}">
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="20"
+                                            Padding="20"
+                                            Background="#FFF0F0F0"
+                                            CornerRadius="15">
+                                            
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Top"
+                                                Margin="20 0 0 0">
+
+                                                <StackPanel
+                                                    Orientation="Vertical"
+                                                    VerticalAlignment="Center">
+
+                                                    <TextBlock
+                                                        Text="№"
+                                                        Style="{StaticResource title3}"/>
+
+                                                    <TextBlock
+                                                        Text="{Binding Id}"
+                                                        Style="{StaticResource title3}"/>
+
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Margin="20 0 0 0"
+                                                    Orientation="Vertical">
+
+                                                    <TextBlock
+                                                        Text="Заказчик"
+                                                        Style="{StaticResource title3}"/>
+
+                                                    <TextBlock
+                                                        Text="{Binding ClientName}"/>
+
+                                                    <TextBlock
+                                                        Text="{Binding ClientPhone}"/>
+
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Orientation="Vertical"
+                                                    VerticalAlignment="Center"
+                                                    Margin="20 0 0 0">
+
+                                                    <TextBlock
+                                                        Text="Статус"
+                                                        Style="{StaticResource title3}"/>
+
+                                                    <StackPanel
+                                                        Orientation="Horizontal">
+
+                                                        <Button
+                                                            Width="25"
+                                                            Height="25"
+                                                            Content="&lt;"
+                                                            FontSize="20"/>
+                                                        
+                                                        <TextBlock
+                                                            Text="{Binding Status}"
+                                                            Foreground="{Binding Color}"
+                                                            Style="{StaticResource title1}"
+                                                            Margin="5 0 5 0"
+                                                            FontSize="20"/>
+
+                                                        <Button
+                                                            Width="25"
+                                                            Height="25"
+                                                            Content=">"/>
+
+                                                    </StackPanel>
+                                                    
+                                                    
+
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Orientation="Vertical"
+                                                    VerticalAlignment="Center"
+                                                    Margin="20 0 0 0">
+
+                                                    <TextBlock
+                                                        Text="Исполнитель:"
+                                                        Style="{StaticResource title3}"/>
+
+                                                    <ComboBox
+                                                        x:Name="ComboBoxExecutorsList"   
+                                                        Width="200"   
+                                                        Height="40"  
+                                                        FontSize="18"    
+                                                        HorizontalAlignment="Center"   
+                                                        VerticalAlignment="Top" 
+                                                        VerticalContentAlignment="Center"  
+                                                        Padding="15,0,0,0"   
+                                                        Background="Transparent"  
+                                                        Foreground="Black">
+
+                                                        <ComboBoxItem Content="Давид Давидов"/>
+                                                        <ComboBoxItem Content="Александр Александров"/>
+
+                                                    </ComboBox>
+
+                                                </StackPanel>
+
+                                            </StackPanel>
+                                            
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </StackPanel>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+
+
+            </Border>
+
+        </StackPanel>
+
+
     </Grid>
 </Window>

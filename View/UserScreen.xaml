@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DemoExam"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="UserScreen" Height="720" Width="1240">
 
     <Window.Resources>
@@ -42,16 +43,26 @@
                     Orientation="Horizontal">
 
                     <TextBlock
+                        x:Name="TextBlockUserName"
                         Style="{StaticResource style1}"
                         FontSize="25"
                         Text="Иванов Иван Иванович"/>
 
                     <Button 
                         Style="{StaticResource btnStyle}"
-                        Margin="500 0 0 0"
+                        Margin="300 0 0 0"
                         Width="200"
                         Content="Подать заявку"
                         Click="MakeRequestButtonClick"/>
+
+                    <Button
+                        Style="{StaticResource btnStyle}"
+                        Margin="20 0 0 0"
+                        Width="200"
+                        Content="Оставить отзыв"
+                        Click="GenerateQrCode"/>
+
+
 
                 </StackPanel>
 
@@ -84,7 +95,8 @@
 
         <Grid
             x:Name="gridRequest"
-            Background="#3F000000">
+            Background="#3F000000"
+            Visibility="Collapsed">
 
             <Grid
                  Width="500"
@@ -150,7 +162,42 @@
 
             </Grid>
 
+         
+        </Grid>
 
+
+        <Grid
+            x:Name="gridQrCode"
+            Background="#3F000000"
+            Visibility="Visible">
+
+            <Grid
+           Width="500"
+           Height="500">
+
+                <Border
+              Padding="40"
+              Background="White"
+              CornerRadius="30">
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="Пожалуйста, оставьте ваш отзыв"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource title1}"/>
+
+                        <Image
+                            Margin="0 20 0 0"
+                            x:Name="ImageQrCode"
+                            Width="300"
+                            Height="300"/>
+
+                    </StackPanel>
+
+                </Border>
+
+            </Grid>
         </Grid>
 
 

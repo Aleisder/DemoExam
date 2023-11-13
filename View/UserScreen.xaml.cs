@@ -1,17 +1,22 @@
 ﻿using DemoExam.Model;
 using DemoExam.Repository;
+using QRCoder;
+using QRCoder.Xaml;
 using System.Collections.Generic;
 using System.Linq;
+using System.Printing;
+using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace DemoExam
 {
     public partial class UserScreen : Window
     {
 
-
+        public readonly QRCodeGenerator QRCodeGenerator = new();
 
         public UserScreen()
         {
@@ -21,6 +26,12 @@ namespace DemoExam
         public UserScreen(string login)
         {
             InitializeComponent();
+
+            var user = userRepository.GetUserByLogin(login);
+            TextBlockUserName.Text = user.Surname + " " + user.Name;
+
+
+
             this.Login = login;
             fields.Add(modelField);
             fields.Add(typeField);
@@ -93,5 +104,15 @@ namespace DemoExam
             requestDataGrid.Columns[4].Visibility = Visibility.Collapsed;
         }
 
+        private void GenerateQrCode(object sender, RoutedEventArgs e)
+        {
+            QRCodeData data = QRCodeGenerator.CreateQrCode("adfadfaf", QRCodeGenerator.ECCLevel.Q);
+            XamlQRCode qrCode = new XamlQRCode(data);
+            DrawingImage qrCodeAsXaml = qrCode.GetGraphic(20);
+
+            gridQrCode.Visibility = Visibility.Visible;
+            ImageQrCode.Source = qrCodeAsXaml;
+
+        }
     }
 }
