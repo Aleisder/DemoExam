@@ -40,29 +40,11 @@ namespace DemoExam
 
             else if (userRepository.ValidateUser(login, password))
             {
-                User user = userRepository.GetUserByLogin(login);
 
-                switch (user.Role)
-                {
-                    case Role.Client:
-                        {
-                            UserScreen userScreen = new(user.Login);
-                            userScreen.Show();
-                            break;
-                        }
-                    case Role.Manager:
-                        {
-                            ManagerScreen managerScreen = new(user.Login);
-                            managerScreen.Show();
-                            break;
-                        }
-                    case Role.Executor:
-                        {
-                            ExecutorScreen executorScreen = new(user.Login);
-                            executorScreen.Show();
-                            break;
-                        }
-                }
+
+                ManagerScreen managerScreen = new("sdf");
+                managerScreen.Show();
+
                 Close();
             }
             else

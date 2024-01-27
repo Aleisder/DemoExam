@@ -8,20 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Loading.png" />
+    <None Remove="Images\icon-delete.png" />
+    <None Remove="Images\icon-edit.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="QRCoder" Version="1.4.3" />
-    <PackageReference Include="QRCoder.Xaml" Version="1.4.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <SplashScreen Include="Loading.png" />
+    <Resource Include="Images\icon-delete.png" />
+    <Resource Include="Images\icon-edit.png" />
   </ItemGroup>
 
 </Project>
