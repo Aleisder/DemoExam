@@ -1,8 +1,5 @@
 ﻿using DemoExam.Model;
 using System.Collections.Generic;
-using System.Linq;
-using DemoExam.Configuration;
-using System;
 
 namespace DemoExam.Repository
 {
@@ -12,6 +9,15 @@ namespace DemoExam.Repository
             new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
             new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
             new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер"),
+            new (1, "Иванов", "Иван", "ivanov@gmail.com", "asdfjkh20", "Старший инженер")
         };
 
         public void AddUser(User user) => Users.Add(user);

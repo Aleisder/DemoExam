@@ -6,9 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="Styles/TextBox.xaml" />
                 <ResourceDictionary Source="Styles/Button/Button.xaml" />
+                <ResourceDictionary Source="Styles/TabItem/DefaultTabItem.xaml" />
                 <ResourceDictionary Source="Styles/TextBox/InputUserInfoTextBox.xaml" />
                 <ResourceDictionary Source="Styles/TextBlock/TitleUserInfoTextBlock.xaml" />
             </ResourceDictionary.MergedDictionaries>

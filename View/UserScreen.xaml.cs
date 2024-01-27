@@ -12,6 +12,7 @@ namespace DemoExam.View
         private string Login;
 
         private readonly UserRepository userRepository = new();
+        private readonly LogRepository logRepository = new();
 
         private readonly List<TextBox> TextFields;
 
@@ -21,6 +22,7 @@ namespace DemoExam.View
             InitializeComponent();
 
             userRepository.GetAll().ForEach(user => { UserBoxList.Items.Add(user); });
+            logRepository.GetAll().ForEach(log => { LogListView.Items.Add(log); });
 
             TextFields = new()
             {
@@ -60,6 +62,17 @@ namespace DemoExam.View
 
             MessageBox.Show("CLicked");
 
+        }
+
+        private void ExitClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var result = MessageBox.Show("Вы действительно хотите выйти из учётной записи?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                var screen = new AuthorizationScreen();
+                screen.Show();
+                Close();
+            }
         }
     }
 }
