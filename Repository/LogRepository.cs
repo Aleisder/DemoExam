@@ -1,31 +1,39 @@
-﻿using DemoExam.Model;
+﻿using DemoExam.Configuration;
+using DemoExam.Model;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DemoExam.Repository
 {
-    class LogRepository
+    public class LogRepository
     {
-        private readonly List<Log> logs = new()
+
+        public static void AddLog(string module, string description)
         {
-            new Log(0, LogType.INFO, "Создан новый пользователь"),
-            new Log(0, LogType.INFO, "Выполнен вход в учётную запись"),
-            new Log(0, LogType.INFO, "Выполнен выход из учётной записи"),
-            new Log(0, LogType.INFO, "Создан новый пользователь"),
-            new Log(0, LogType.INFO, "Выполнен вход в учётную запись"),
-            new Log(0, LogType.INFO, "Выполнен выход из учётной записи"),
-            new Log(0, LogType.INFO, "Создан новый пользователь"),
-            new Log(0, LogType.INFO, "Выполнен вход в учётную запись"),
-            new Log(0, LogType.INFO, "Выполнен выход из учётной записи"),
-            new Log(0, LogType.INFO, "Создан новый пользователь"),
-            new Log(0, LogType.INFO, "Выполнен вход в учётную запись"),
-            new Log(0, LogType.INFO, "Выполнен выход из учётной записи"),
-            new Log(0, LogType.INFO, "Создан новый пользователь"),
-            new Log(0, LogType.INFO, "Выполнен вход в учётную запись"),
-            new Log(0, LogType.INFO, "Выполнен выход из учётной записи"),
-        };
+            var log = new Log()
+            {
+                Module = module,
+                Description = description,
+                LoggedAt = DateTime.Now
+            };
 
-        public void AddLog(Log log) => logs.Add(log);
+            string query = "INSERT INTO Log (type_id, module, description, logged_at) VALUES (1, {0}, {1}, {2})";
 
-        public List<Log> GetAll() => logs;
+            using (var context = new SqlDatabase())
+            {
+                context.Database.ExecuteSqlRaw(query, module, description, DateTime.Now);
+                context.SaveChanges();
+            }
+        }
+
+        public static List<Log> GetAll()
+        {
+            using(var context = new SqlDatabase())
+            {
+                return context.Logs.ToList();
+            }
+        }
     }
 }

@@ -17,9 +17,11 @@
 
             <Border Background="White"
                     CornerRadius="30"
-                    Padding="30">
+                    Padding="20">
 
                 <StackPanel>
+
+                    <Image Source="/Images/gerb-mvd.png" />
 
                     <TextBlock Text="Добро пожаловать!"
                                Style="{StaticResource TitleUserInfoTextBlock}"
@@ -48,32 +50,16 @@
                                FontSize="15"
                                Visibility="Hidden" />
 
-                    <Button Margin="0 20 0 0"
-                            Style="{StaticResource DefaultButton}"
+                    <Button Style="{StaticResource DefaultButton}"
                             Content="Войти"
                             Click="EnterButtonClick" />
-
-
-                    <Button Margin="0 20 0 0"
-                            Style="{StaticResource DefaultButton}"
-                            Content="Создать аккаунт" />
-
-
-
-
 
                 </StackPanel>
 
 
             </Border>
 
-
-
-
-
         </Grid>
-
-
 
     </Grid>
 </Window>

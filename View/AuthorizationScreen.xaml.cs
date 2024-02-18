@@ -1,17 +1,14 @@
-﻿using DemoExam.Repository;
+﻿using DemoExam.Configuration;
+using DemoExam.Repository;
 using DemoExam.View;
+using System.Linq;
 using System.Windows;
 
 namespace DemoExam
 {
     public partial class AuthorizationScreen : Window
     {
-        private readonly UserRepository userRepository = new();
-
-        public AuthorizationScreen()
-        {
-            InitializeComponent();
-        }
+        public AuthorizationScreen() => InitializeComponent();
 
         private void EnterButtonClick(object sender, RoutedEventArgs e)
         {
@@ -24,10 +21,9 @@ namespace DemoExam
                 errorText.Visibility = Visibility.Visible;
             }
 
-            else if (userRepository.ValidateUser(login, password))
+            else if (UserRepository.ValidateUser(login, password))
             {
-
-
+                LogRepository.AddLog("AuthorizationScreen", string.Format("Logged into account with login '{0}'", login));
                 ManagerScreen managerScreen = new("sdf");
                 managerScreen.Show();
                 Close();

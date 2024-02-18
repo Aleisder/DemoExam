@@ -45,57 +45,117 @@
         </Border>
 
         <Border Background="White"
-                Margin="40 40 40 40"
+                Margin="40"
                 CornerRadius="15"
                 Grid.Row="1"
                 Padding="15">
 
-
-            <TabControl>
+            <TabControl BorderThickness="0">
                 <TabItem Header="Пользователи"
                          Style="{StaticResource DefaultTabItem}">
 
                     <StackPanel>
 
-                        <Button Style="{StaticResource DefaultButton}"
-                                Padding="15"
-                                Content="Добавить пользотеля"
-                                Click="OpenAddUserWindowClick"
-                                HorizontalAlignment="Right" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
 
-                        <ListView Name="UserBoxList"
+                            <Button Style="{StaticResource DefaultButton}"
+                                    Click="OpenAddUserWindowClick"
+                                    Padding="10"
+                                    Margin="0 0 10 0">
+                                <Image Source="/Images/icon-add.png"
+                                       Width="25" />
+                            </Button>
+
+                            <Button x:Name="EditButton"
+                                    Style="{StaticResource DefaultButton}"
+                                    Click="EditButton_Click"
+                                    Padding="10"
+                                    IsEnabled="False"
+                                    Margin="0 0 10 0">
+                                <Image Source="/Images/icon-edit.png"
+                                       Width="25" />
+                            </Button>
+
+                            <Button x:Name="DeleteButton"
+                                    Style="{StaticResource DefaultButton}"
+                                    Click="DeleteUserClick"
+                                    IsEnabled="False"
+                                    Padding="10">
+                                <Image Source="/Images/icon-delete.png"
+                                       Width="25" />
+                            </Button>
+
+                        </StackPanel>
+
+
+
+                        <ListView Name="UserListView"
                                   Margin="10"
                                   Padding="20"
-                                  Height="380">
-
+                                  Height="380"
+                                  SelectionChanged="UserListItemClick">
 
                             <ListView.ItemTemplate>
                                 <DataTemplate>
 
-                                    <Border Background="#DDEDEDED"
-                                            Margin="5"
-                                            Padding="10"
-                                            CornerRadius="15">
+                                    <Border Background="#F5F5F5"
+                                            CornerRadius="5"
+                                            Padding="10">
+
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Name}"
-                                                       Margin="0 0 10 0" />
-                                            <TextBlock Text="{Binding Surname}" />
+
+                                            <TextBlock Text="ID: "
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Id}"
+                                                       Margin="0 0 20 0"
+                                                       VerticalAlignment="Center" />
+
+                                            <StackPanel Margin="0 0 20 0"
+                                                        Width="300">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Margin="0 0 10 0"
+                                                               FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding Surname}"
+                                                               FontWeight="SemiBold" />
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Position}" />
+                                            </StackPanel>
+
+
+
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Text="Создано:" />
+                                                <TextBlock Text="{Binding CreatedAt}"
+                                                           Grid.Column="1" />
+                                                <TextBlock Text="Обновлено: "
+                                                           Grid.Row="1" />
+                                                <TextBlock Text="{Binding CreatedAt}"
+                                                           Grid.Column="1"
+                                                           Grid.Row="1" />
+
+                                            </Grid>
+
+
 
                                             <StackPanel Orientation="Horizontal"
                                                         HorizontalAlignment="Right">
 
-                                                <Image Source="/Images/icon-edit.png"
-                                                       MouseDown="Image_MouseDown"
-                                                       Width="30" />
-                                                <Image Source="/Images/icon-delete.png"
-                                                       Width="30" />
                                             </StackPanel>
 
                                         </StackPanel>
                                     </Border>
-
-
-
 
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -112,16 +172,16 @@
 
                     <ListView x:Name="LogListView">
                         <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding CreatedAt}"
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn DisplayMemberBinding="{Binding LoggedAt}"
                                                 Header="Дата и время"
-                                                Width="300" />
+                                                Width="200" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Type}"
                                                 Header="Тип"
-                                                Width="100" />
+                                                Width="80" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Description}"
                                                 Header="Описание"
-                                                Width="400" />
+                                                Width="600" />
                             </GridView>
                         </ListView.View>
 
@@ -130,8 +190,6 @@
             </TabControl>
 
         </Border>
-
-
 
         <Grid x:Name="RequestGrid"
               Background="#3F000000"
@@ -220,15 +278,25 @@
 
                         </Grid>
 
-                        <Button Content="Создать"
+                        <Button x:Name="RequestButton"
+                                Content="Создать"
                                 Padding="15"
                                 Margin="0 30 0 0"
                                 Style="{StaticResource DefaultButton}"
                                 Click="ConfirmUserClick" />
 
+                        <Button x:Name="UpdateButton"
+                                Content="Обновить"
+                                Padding="15"
+                                Visibility="Collapsed"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="UpdateButton_Click" />
+
                     </StackPanel>
                 </Border>
             </Grid>
         </Grid>
+
     </Grid>
 </Window>

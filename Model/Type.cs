@@ -1,10 +1,21 @@
-﻿namespace DemoExam.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DemoExam.Model
 {
-    internal enum Type
+    public class Type
     {
-        NotLaunching,
-        BrokenDisplay,
-        Overheat,
-        Cleaning
+        [Key, Column("id")]
+        public int Id { get; set; }
+        [Column("type")]
+        public string? Value { get; set; }
+
+        public Type(int id, string value)
+        {
+            Id = id;
+            Value = value;
+        }
+
+        public override string ToString() => Value;
     }
 }

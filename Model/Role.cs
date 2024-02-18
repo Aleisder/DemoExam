@@ -1,9 +1,14 @@
-﻿namespace DemoExam.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DemoExam.Model
 {
-    internal enum Role
+    public class Role
     {
-        Client,
-        Manager,
-        Executor
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        [Column("role")]
+        public string? Value { get; set; } = null!;
     }
 }

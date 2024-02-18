@@ -4,7 +4,7 @@
     <Style x:Key="DefaultButton" TargetType="Button">
         <Style.Resources>
             <Style TargetType="Border">
-                <Setter Property="CornerRadius" Value="15" />
+                <Setter Property="CornerRadius" Value="5" />
             </Style>
         </Style.Resources>
         <Setter Property="Background" Value="#FFF2CC01" />

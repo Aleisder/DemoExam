@@ -1,27 +1,30 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoExam.Model
 {
-    class User
+    [Table("User")]
+    public class User
     {
-        public int Id { get; }
-        public string Surname { set; get; }
-        public string Name { set; get; }
-        public string Login { set; get; }
-        public string Password { set; get; }
-        public string Position { set; get; }
-        public DateTime CreatedAt { set; get; }
-        public DateTime UpdatedAt { set; get; }
-        public User(int id, string surname, string name, string login, string password, string position)
-        {
-            Id = id;
-            Surname = surname;
-            Name = name;
-            Login = login;
-            Password = password;
-            Position = position;
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
-        }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public int Id { get; set; }
+        [Column("first_name")]
+        public string? Name { set; get; }
+        [Column("last_name")]
+        public string? Surname { set; get; }
+        [Column("login")]
+        public string? Login { set; get; }
+        [Column("password")]
+        public string? Password { set; get; }
+        [Column("position")]
+        public string? Position { set; get; }
+        [Column("role_id")]
+        [ForeignKey("Id")]
+        public Role? Role { set; get; }
+        [Column("created_at")]
+        public DateTime? CreatedAt { set; get; }
+        [Column("updated_at")]
+        public DateTime? UpdatedAt { set; get; }
     }
 }

@@ -1,20 +1,35 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoExam.Model
 {
-    class Log
+    [Table("Log")]
+    public class Log
     {
+        [Key, Column("id")]
         public int Id { get; set; }
-        public LogType Type { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedAt { get; set; }
 
-        public Log(int id, LogType type, string description)
+        [Column("type_id")]
+        [ForeignKey("Id")]
+        public Type? Type { get; set; }
+
+        [Column("module")]
+        public string? Module { get; set; }
+
+        [Column("description")]
+        public string? Description { get; set; }
+
+        [Column("logged_at")]
+        public DateTime LoggedAt { get; set; }
+
+        public Log() { }
+
+        public Log(string module, string description)
         {
-            Id = id;
-            Type = type;
+            Module = module;
             Description = description;
-            CreatedAt = DateTime.Now;
+            LoggedAt = DateTime.Now;
         }
     }
 }
