@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoExam.Model
 {
+    [Table("Role")]
     public class Role
     {
         [Required]

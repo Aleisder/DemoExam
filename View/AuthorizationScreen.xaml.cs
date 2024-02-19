@@ -1,7 +1,5 @@
-﻿using DemoExam.Configuration;
-using DemoExam.Repository;
+﻿using DemoExam.Repository;
 using DemoExam.View;
-using System.Linq;
 using System.Windows;
 
 namespace DemoExam
@@ -13,7 +11,7 @@ namespace DemoExam
         private void EnterButtonClick(object sender, RoutedEventArgs e)
         {
             string login = loginField.Text;
-            string password = passwordField.Text;
+            string password = passwordField.Password;
 
             if (login == "" || password == "")
             {

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DemoExam": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Server": "(localdb)\\AleisderDB",
+        "Database": "Department"
+      }
+    }
+  }
+}

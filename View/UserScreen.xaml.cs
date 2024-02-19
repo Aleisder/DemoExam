@@ -1,7 +1,6 @@
 ﻿using DemoExam.Model;
 using DemoExam.Repository;
 using DemoExam.Services;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -11,15 +10,10 @@ namespace DemoExam.View
 {
     public partial class ManagerScreen : Window
     {
-        private string Login;
-
-        private readonly UserRepository userRepository = new();
-
         private readonly List<TextBox> TextFields;
 
         public ManagerScreen(string login)
         {
-            this.Login = login;
             InitializeComponent();
 
             UserRepository.GetAll().ForEach(user => { UserListView.Items.Add(user); });

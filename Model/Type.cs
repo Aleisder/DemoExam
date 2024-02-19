@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoExam.Model
 {
+    [Table("Type")]
     public class Type
     {
         [Key, Column("id")]

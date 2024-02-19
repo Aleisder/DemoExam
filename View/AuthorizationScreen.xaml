@@ -39,8 +39,8 @@
                                FontSize="18"
                                FontWeight="SemiBold" />
 
-                    <TextBox x:Name="passwordField"
-                             FontSize="18" />
+                    <PasswordBox x:Name="passwordField"
+                                 FontSize="18" />
 
                     <TextBlock x:Name="errorText"
                                Text="Неверный логин или пароль"
