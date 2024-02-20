@@ -163,6 +163,8 @@ namespace DemoExam.View
             UserRepository.UpdateUser(selectedUser);
             LogService.AddLog(selectedUser, LogEvent.UPDATE);
             Logs.Add(LogRepository.GetLast());
+
+            CloseAddUserWindow();
         }
     }
 }

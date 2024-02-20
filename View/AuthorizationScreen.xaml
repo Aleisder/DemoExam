@@ -9,7 +9,7 @@
         Title="Документооборот МВД"
         Icon="/Images/policeman.png"
         Height="720"
-        Width="1240">
+        Width="600">
 
     <Grid Background="#FF27295A">
 
