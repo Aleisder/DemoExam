@@ -18,6 +18,11 @@ namespace DemoExam.Repository
             Context.SaveChanges();
         }
 
+        public static Log GetLast() => Context
+            .Logs
+            .OrderBy(it => it.Id)
+            .Last();
+
         public static List<Log> GetAll() => Context.Logs.ToList();
     }
 }

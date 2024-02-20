@@ -20,6 +20,11 @@ namespace DemoExam.Repository
 
         public static List<User> GetAll() => Context.Users.ToList();
 
+        public static User GetLast() => Context
+            .Users
+            .OrderBy(it => it.Id)
+            .Last();
+
         public static User GetByLogin(string login) => Context
             .Users
             .Where(it => it.Login == login)

@@ -2,8 +2,10 @@
 using DemoExam.Model;
 using DemoExam.Repository;
 using DemoExam.Services;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +15,8 @@ namespace DemoExam.View
     {
         private readonly List<TextBox> TextFields;
         private readonly User CurrentUser = new();
+        private readonly ObservableCollectionListSource<User> Users = new();
+        private readonly ObservableCollectionListSource<Log> Logs = new();
 
         public ManagerScreen(string login)
         {
@@ -21,8 +25,11 @@ namespace DemoExam.View
             CurrentUser = UserRepository.GetByLogin(login);
             LogService.AddLog(CurrentUser, LogEvent.LOG_IN);
 
-            UserRepository.GetAll().ForEach(user => { UserListView.Items.Add(user); });
-            LogRepository.GetAll().ForEach(log => { LogListView.Items.Add(log); });
+            UserRepository.GetAll().ForEach(user => { Users.Add(user); });
+            LogRepository.GetAll().ForEach(log => { Logs.Add(log); });
+
+            UserListView.ItemsSource = Users;
+            LogListView.ItemsSource = Logs;
 
             TextFields = new()
             {
@@ -66,10 +73,11 @@ namespace DemoExam.View
                 UpdatedAt = DateTime.Now
             };
             UserRepository.AddUser(user);
+            Users.Add(UserRepository.GetLast());
             LogService.AddLog(user, LogEvent.CREATE);
+            Logs.Add(LogRepository.GetAll().Last());
             CloseAddUserWindow();
             ClearTextBoxes();
-            UserListView.Items.Add(user);
         }
 
         private void ExitClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -87,13 +95,14 @@ namespace DemoExam.View
         private void DeleteUserClick(object sender, RoutedEventArgs e)
         {
             int index = UserListView.SelectedIndex;
-            User user = (User)UserListView.Items.GetItemAt(index);
+            User user = Users.ElementAt(index);
             if (user != null)
             {
                 UserRepository.DeleteUser(user);
+                Users.Remove(user);
                 LogService.AddLog(user, LogEvent.DELETE);
+                Logs.Add(LogRepository.GetLast());
             }
-            UserListView.Items.RemoveAt(index);
         }
 
         private void UserListItemClick(object sender, SelectionChangedEventArgs e)
@@ -146,8 +155,14 @@ namespace DemoExam.View
             selectedUser.Position = PositionTextBox.Text;
             selectedUser.Password = PasswordTextBox.Text;
             selectedUser.Login = LoginTextBox.Text;
+
+            int index = UserListView.SelectedIndex;
+            Users.RemoveAt(index);
+            Users.Insert(index, selectedUser);
+
             UserRepository.UpdateUser(selectedUser);
             LogService.AddLog(selectedUser, LogEvent.UPDATE);
+            Logs.Add(LogRepository.GetLast());
         }
     }
 }
