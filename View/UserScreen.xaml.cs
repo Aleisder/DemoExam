@@ -94,14 +94,18 @@ namespace DemoExam.View
 
         private void DeleteUserClick(object sender, RoutedEventArgs e)
         {
-            int index = UserListView.SelectedIndex;
-            User user = Users.ElementAt(index);
-            if (user != null)
+            var result = MessageBox.Show("Вы действительно хотите удалить пользователя?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
             {
-                UserRepository.DeleteUser(user);
-                Users.Remove(user);
-                LogService.AddLog(user, LogEvent.DELETE);
-                Logs.Add(LogRepository.GetLast());
+                int index = UserListView.SelectedIndex;
+                User user = Users.ElementAt(index);
+                if (user != null)
+                {
+                    UserRepository.DeleteUser(user);
+                    Users.Remove(user);
+                    LogService.AddLog(user, LogEvent.DELETE);
+                    Logs.Add(LogRepository.GetLast());
+                }
             }
         }
 
