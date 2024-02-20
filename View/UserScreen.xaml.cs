@@ -1,4 +1,5 @@
-﻿using DemoExam.Model;
+﻿using DemoExam.Enums;
+using DemoExam.Model;
 using DemoExam.Repository;
 using DemoExam.Services;
 using System;
@@ -11,10 +12,14 @@ namespace DemoExam.View
     public partial class ManagerScreen : Window
     {
         private readonly List<TextBox> TextFields;
+        private readonly User CurrentUser = new();
 
         public ManagerScreen(string login)
         {
             InitializeComponent();
+
+            CurrentUser = UserRepository.GetByLogin(login);
+            LogService.AddLog(CurrentUser, LogEvent.LOG_IN);
 
             UserRepository.GetAll().ForEach(user => { UserListView.Items.Add(user); });
             LogRepository.GetAll().ForEach(log => { LogListView.Items.Add(log); });
@@ -61,19 +66,10 @@ namespace DemoExam.View
                 UpdatedAt = DateTime.Now
             };
             UserRepository.AddUser(user);
-            string logMessage = string.Format("User [Name: {0}, Surname: {1}, Login: {2}] was created", user.Name, user.Surname, user.Login);
-            LogRepository.AddLog("UserScreen", logMessage);
-            LogListView.Items.Add(new Log("UserScreen", logMessage));
+            LogService.AddLog(user, LogEvent.CREATE);
             CloseAddUserWindow();
             ClearTextBoxes();
             UserListView.Items.Add(user);
-        }
-
-        private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
-            MessageBox.Show("CLicked");
-
         }
 
         private void ExitClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -81,6 +77,7 @@ namespace DemoExam.View
             var result = MessageBox.Show("Вы действительно хотите выйти из учётной записи?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                LogService.AddLog(CurrentUser, LogEvent.LOG_OUT);
                 var screen = new AuthorizationScreen();
                 screen.Show();
                 Close();
@@ -94,7 +91,7 @@ namespace DemoExam.View
             if (user != null)
             {
                 UserRepository.DeleteUser(user);
-                LogService.DeleteUserLog(user);
+                LogService.AddLog(user, LogEvent.DELETE);
             }
             UserListView.Items.RemoveAt(index);
         }
@@ -150,6 +147,7 @@ namespace DemoExam.View
             selectedUser.Password = PasswordTextBox.Text;
             selectedUser.Login = LoginTextBox.Text;
             UserRepository.UpdateUser(selectedUser);
+            LogService.AddLog(selectedUser, LogEvent.UPDATE);
         }
     }
 }

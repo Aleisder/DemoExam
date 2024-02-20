@@ -1,18 +1,22 @@
-﻿using DemoExam.Model;
+﻿using DemoExam.Enums;
+using DemoExam.Model;
 using DemoExam.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DemoExam.Services
 {
     public class LogService
     {
-        public static void DeleteUserLog(User user)
+        public static void AddLog(User user, LogEvent logEvent)
         {
-            string message = string.Format("User with ID={0} was deleted", user.Id);
+            string message = logEvent switch
+            {
+                LogEvent.CREATE => $"Создан новый пользователь [Логин: {user.Login}, Фамилия: {user.Surname}, Имя: {user.Name}]",
+                LogEvent.UPDATE => $"Обновлены данные о пользователе с ID - {user.Id}",
+                LogEvent.DELETE => $"Обновлены данные о пользователе с ID - {user.Id}",
+                LogEvent.LOG_IN => $"Вход в аккаунт [ID: {user.Id}, Логин: {user.Login}]",
+                LogEvent.LOG_OUT => $"Выход из аккаунта [ID: {user.Id}, Логин: {user.Login}]",
+                _ => "ОШИБКА. Неожидаемый лог"
+            };
             LogRepository.AddLog("UserRepository", message);
         }
     }

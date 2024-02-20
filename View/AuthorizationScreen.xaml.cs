@@ -21,8 +21,7 @@ namespace DemoExam
 
             else if (UserRepository.ValidateUser(login, password))
             {
-                LogRepository.AddLog("AuthorizationScreen", string.Format("Logged into account with login '{0}'", login));
-                ManagerScreen managerScreen = new("sdf");
+                ManagerScreen managerScreen = new(login);
                 managerScreen.Show();
                 Close();
             }

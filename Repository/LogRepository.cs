@@ -9,31 +9,15 @@ namespace DemoExam.Repository
 {
     public class LogRepository
     {
+        private static readonly SqlDatabase Context = new();
 
         public static void AddLog(string module, string description)
         {
-            var log = new Log()
-            {
-                Module = module,
-                Description = description,
-                LoggedAt = DateTime.Now
-            };
-
             string query = "INSERT INTO Log (type_id, module, description, logged_at) VALUES (1, {0}, {1}, {2})";
-
-            using (var context = new SqlDatabase())
-            {
-                context.Database.ExecuteSqlRaw(query, module, description, DateTime.Now);
-                context.SaveChanges();
-            }
+            Context.Database.ExecuteSqlRaw(query, module, description, DateTime.Now);
+            Context.SaveChanges();
         }
 
-        public static List<Log> GetAll()
-        {
-            using(var context = new SqlDatabase())
-            {
-                return context.Logs.ToList();
-            }
-        }
+        public static List<Log> GetAll() => Context.Logs.ToList();
     }
 }
