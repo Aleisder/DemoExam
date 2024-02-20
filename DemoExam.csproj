@@ -14,7 +14,9 @@
     <None Remove="Images\icon-edit.png" />
     <None Remove="Images\icon-exit.png" />
     <None Remove="Images\icon-settings.png" />
+    <None Remove="Images\icon.png" />
     <None Remove="Images\mvd.png" />
+    <None Remove="Images\policeman.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +31,24 @@
     <Resource Include="Images\icon-edit.png" />
     <Resource Include="Images\icon-exit.png" />
     <Resource Include="Images\icon-settings.png" />
+    <Resource Include="Images\icon.png" />
     <Resource Include="Images\mvd.png" />
+    <Resource Include="Images\policeman.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:DemoExam.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="UserScreen"
+        Title="Документооборот МВД"
+        Icon="/Images/policeman.png"
         Height="720"
         Width="1240">
 
