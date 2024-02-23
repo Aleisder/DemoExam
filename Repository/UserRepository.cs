@@ -46,6 +46,5 @@ namespace DemoExam.Repository
             Context.SaveChanges();
         }
 
-
     }
 }

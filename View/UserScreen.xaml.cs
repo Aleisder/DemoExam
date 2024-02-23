@@ -2,9 +2,7 @@
 using DemoExam.Model;
 using DemoExam.Repository;
 using DemoExam.Services;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,10 +11,7 @@ namespace DemoExam.View
 {
     public partial class ManagerScreen : Window
     {
-        private readonly List<TextBox> TextFields;
         private readonly User CurrentUser = new();
-        private readonly ObservableCollectionListSource<User> Users = new();
-        private readonly ObservableCollectionListSource<Log> Logs = new();
 
         public ManagerScreen(string login)
         {
@@ -25,20 +20,8 @@ namespace DemoExam.View
             CurrentUser = UserRepository.GetByLogin(login);
             LogService.AddLog(CurrentUser, LogEvent.LOG_IN);
 
-            UserRepository.GetAll().ForEach(user => { Users.Add(user); });
-            LogRepository.GetAll().ForEach(log => { Logs.Add(log); });
-
-            UserListView.ItemsSource = Users;
-            LogListView.ItemsSource = Logs;
-
-            TextFields = new()
-            {
-                SurnameTextxBox,
-                NameTextBox,
-                LoginTextBox,
-                PasswordTextBox,
-                PositionTextBox
-            };
+            UserListView.ItemsSource = UserService.Users;
+            LogListView.ItemsSource = LogService.Logs;
         }
 
         private void OpenAddUserWindowClick(object sender, RoutedEventArgs e) => OpenAddUserWindow();
@@ -58,7 +41,14 @@ namespace DemoExam.View
             UpdateButton.Visibility = Visibility.Collapsed;
         }
 
-        private void ClearTextBoxes() => TextFields.ForEach(x => x.Clear());
+        private void ClearTextBoxes()
+        {
+            SurnameTextxBox.Clear();
+            NameTextBox.Clear();
+            LoginTextBox.Clear();
+            PasswordTextBox.Clear();
+            PositionTextBox.Clear();
+        }
 
         private void ConfirmUserClick(object sender, RoutedEventArgs e)
         {
@@ -72,10 +62,8 @@ namespace DemoExam.View
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
-            UserRepository.AddUser(user);
-            Users.Add(UserRepository.GetLast());
+            UserService.AddUser(user);
             LogService.AddLog(user, LogEvent.CREATE);
-            Logs.Add(LogRepository.GetAll().Last());
             CloseAddUserWindow();
             ClearTextBoxes();
         }
@@ -98,13 +86,11 @@ namespace DemoExam.View
             if (result == MessageBoxResult.Yes)
             {
                 int index = UserListView.SelectedIndex;
-                User user = Users.ElementAt(index);
+                User user = UserService.Users.ElementAt(index);
                 if (user != null)
                 {
-                    UserRepository.DeleteUser(user);
-                    Users.Remove(user);
+                    UserService.DeleteUser(user);
                     LogService.AddLog(user, LogEvent.DELETE);
-                    Logs.Add(LogRepository.GetLast());
                 }
             }
         }
@@ -161,12 +147,9 @@ namespace DemoExam.View
             selectedUser.Login = LoginTextBox.Text;
 
             int index = UserListView.SelectedIndex;
-            Users.RemoveAt(index);
-            Users.Insert(index, selectedUser);
 
-            UserRepository.UpdateUser(selectedUser);
+            UserService.UpdateUser(index, selectedUser);
             LogService.AddLog(selectedUser, LogEvent.UPDATE);
-            Logs.Add(LogRepository.GetLast());
 
             CloseAddUserWindow();
         }

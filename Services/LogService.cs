@@ -1,11 +1,19 @@
 ﻿using DemoExam.Enums;
 using DemoExam.Model;
 using DemoExam.Repository;
+using System.Collections.ObjectModel;
 
 namespace DemoExam.Services
 {
     public class LogService
     {
+        public static readonly ObservableCollection<Log> Logs = new();
+
+        static LogService()
+        {
+            LogRepository.GetAll().ForEach(log => Logs.Add(log));
+        }
+
         public static void AddLog(User user, LogEvent logEvent)
         {
             string message = logEvent switch
@@ -18,6 +26,8 @@ namespace DemoExam.Services
                 _ => "ОШИБКА. Неожидаемый лог"
             };
             LogRepository.AddLog("UserRepository", message);
+            Logs.Add(LogRepository.GetLast());
         }
+
     }
 }
