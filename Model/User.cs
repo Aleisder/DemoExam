@@ -26,5 +26,7 @@ namespace DemoExam.Model
         public DateTime? CreatedAt { set; get; }
         [Column("updated_at")]
         public DateTime? UpdatedAt { set; get; }
+
+        public override string ToString() => $"{Name} {Surname}";
     }
 }

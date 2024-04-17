@@ -8,8 +8,179 @@
         WindowStartupLocation="CenterScreen"
         Title="Документооборот МВД"
         Icon="/Images/policeman.png"
-        Height="720"
+        Height="800"
         Width="1240">
+
+    <Window.Resources>
+
+        <DataTemplate x:Key="VolumeListItem">
+            <Border Background="#F5F5F5"
+                    CornerRadius="5"
+                    Padding="10 10 10 20">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Количество актов:"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ActCount}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Количество дел:"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding CaseCount}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <Button Content="Редактировать"
+                            Style="{StaticResource DefaultButton}"
+                            Click="EditVolumeButtonClick" />
+
+                    <Button Content="Удалить"
+                            Style="{StaticResource DefaultButton}"
+                            Click="DeleteVolumeButtonClick" />
+
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ActListItem">
+            <Border Background="#F5F5F5"
+                    CornerRadius="5"
+                    Padding="10 10 10 20">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Всего дел:"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding AllCaseCount}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Закрытых дел:"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding CloseCaseCount}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Text="Дел в производстве:"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding OpenCaseCount}"
+                               Margin="0 0 20 0"
+                               VerticalAlignment="Center" />
+
+                    <Button Content="Редактировать"
+                            Style="{StaticResource DefaultButton}"
+                            Click="DeleteActButtonClick" />
+
+                    <Button Content="Удалить"
+                            Style="{StaticResource DefaultButton}"
+                            Click="DeleteActButtonClick" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CaseListItem">
+            <Border Background="#F5F5F5"
+                    CornerRadius="5"
+                    Padding="10 10 10 20">
+                <StackPanel Orientation="Horizontal">
+
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Дело:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding Name}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Создано:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding CreatedAt}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Нарушитель:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding Intruder}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Следователь:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding Investigator}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Статья:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding SectionName}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Вещественные доказательства:"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding Evidence}"
+                                       Margin="0 0 20 0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <Button Content="Редактировать"
+                            Style="{StaticResource DefaultButton}"
+                            Click="DeleteActButtonClick" />
+
+                    <Button Content="Удалить"
+                            Style="{StaticResource DefaultButton}"
+                            Click="DeleteActButtonClick" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+    </Window.Resources>
 
     <Grid Background="#FF27295A">
         <Grid.RowDefinitions>
@@ -33,6 +204,10 @@
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
+                    <Image Source="/Images/icon-question.png"
+                           Margin="0 0 20 0"
+                           MouseDown="HelpButtonClick" />
+
                     <Image Source="/Images/icon-settings.png"
                            Margin="0 0 20 0" />
                     <Image Source="/Images/icon-exit.png"
@@ -168,6 +343,76 @@
 
                 </TabItem>
 
+                <TabItem Header="Архивы"
+                         Style="{StaticResource DefaultTabItem}">
+
+                    <StackPanel Orientation="Vertical">
+
+                        <StackPanel HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+
+                            <Button x:Name="CreateVolumeButton"
+                                    Style="{StaticResource DefaultButton}"
+                                    Padding="5"
+                                    Margin="0,0,10,0"
+                                    Click="CreateVolumeButton_Click"
+                                    Content="Создать том" />
+
+                            <Button x:Name="CreateActButton"
+                                    Style="{StaticResource DefaultButton}"
+                                    Padding="5"
+                                    Margin="0,0,10,0"
+                                    Click="CreateActButton_Click"
+                                    Content="Создать акт" />
+
+                            <Button x:Name="CreateCaseButton"
+                                    Style="{StaticResource DefaultButton}"
+                                    Padding="5"
+                                    Click="CreateCaseButtonClick"
+                                    Content="Создать дело" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Назад"
+                                    Click="ArchiveBackButtonClick" />
+                        </StackPanel>
+
+                        <ListView x:Name="ArchiveListView"
+                                  Margin="10"
+                                  Padding="20"
+                                  Height="380"
+                                  SelectionChanged="UserListItemClick"
+                                  MouseDoubleClick="ArchiveListViewMouseDoubleClick">
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Border Background="#F5F5F5"
+                                            CornerRadius="5"
+                                            Padding="10 10 10 20">
+
+                                        <StackPanel Orientation="Horizontal">
+
+                                            <TextBlock Text="{Binding Name}"
+                                                       Margin="0 0 20 0"
+                                                       VerticalAlignment="Center" />
+
+                                        </StackPanel>
+                                    </Border>
+
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </StackPanel>
+
+                </TabItem>
+
+                <TabItem Header="Статистика"
+                         Style="{StaticResource DefaultTabItem}">
+
+                </TabItem>
+
                 <TabItem Header="Логи"
                          Style="{StaticResource DefaultTabItem}">
 
@@ -188,6 +433,8 @@
 
                     </ListView>
                 </TabItem>
+
+
             </TabControl>
 
         </Border>
@@ -273,9 +520,19 @@
                                        Style="{StaticResource TitleUserInfoTextBlock}" />
 
                             <TextBox x:Name="PositionTextBox"
+                                     Visibility="Hidden"
                                      Grid.Column="1"
                                      Grid.Row="4"
                                      Style="{StaticResource InputUserInfoTextBox}" />
+
+                            <ComboBox x:Name="RoleComboBox"
+                                      Grid.Column="1"
+                                      Margin="10"
+                                      Grid.Row="4">
+                                <ComboBoxItem Content="Администратор" />
+                                <ComboBoxItem Content="Начальник отдела" />
+                                <ComboBoxItem Content="Сотрудник отдела" />
+                            </ComboBox>
 
                         </Grid>
 
@@ -293,6 +550,326 @@
                                 Margin="0 30 0 0"
                                 Style="{StaticResource DefaultButton}"
                                 Click="UpdateButton_Click" />
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="CreateCaseGrid"
+              Background="#3F000000"
+              Visibility="Collapsed"
+              Grid.RowSpan="2">
+
+            <Grid Width="700"
+                  Height="510">
+
+                <Border Padding="40"
+                        Background="White"
+                        CornerRadius="30">
+
+                    <StackPanel>
+
+                        <Button Width="25"
+                                Height="25"
+                                Content="×"
+                                HorizontalAlignment="Right"
+                                Click="CloseCreateCaseClick" />
+
+                        <TextBlock Text="Заполните данные"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Название:"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <TextBox x:Name="CaseNameTextBox"
+                                     Grid.Column="1"
+                                     Grid.Row="0"
+                                     Style="{StaticResource InputUserInfoTextBox}" />
+
+                            <TextBlock Text="Том:"
+                                       Grid.Row="1"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <ComboBox x:Name="CaseVolumeComboBox"
+                                      Grid.Column="1"
+                                      Grid.Row="1"
+                                      FontSize="16"
+                                      SelectionChanged="CaseVolumeComboBox_SelectionChanged"
+                                      Margin="10,5,10,5" />
+
+                            <TextBlock Text="Акт:"
+                                       Grid.Row="2"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <ComboBox x:Name="CaseActComboBox"
+                                      Grid.Column="1"
+                                      Grid.Row="2"
+                                      FontSize="16"
+                                      Margin="10,5,10,5" />
+
+                            <TextBlock Text="Следователь:"
+                                       Grid.Row="3"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <ComboBox x:Name="InvestigatorComboBox"
+                                      Grid.Column="1"
+                                      Grid.Row="3"
+                                      FontSize="16"
+                                      Margin="10,5,10,5" />
+
+                            <TextBlock Text="Нарушитель:"
+                                       Grid.Row="4"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <TextBox x:Name="CaseIntruderTextBox"
+                                     Grid.Column="1"
+                                     Grid.Row="4"
+                                     Style="{StaticResource InputUserInfoTextBox}" />
+
+                            <TextBlock Text="Статья:"
+                                       Grid.Row="5"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <ComboBox x:Name="SectionComboBox"
+                                      Grid.Column="1"
+                                      Grid.Row="5"
+                                      FontSize="16"
+                                      Margin="10,5,10,5" />
+
+                            <TextBlock Text="Вещественные доказательства:"
+                                       Grid.Row="6"
+                                       Grid.Column="0"
+                                       TextWrapping="Wrap"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <TextBox x:Name="EvidenceTextBox"
+                                     Grid.Column="1"
+                                     Grid.Row="6"
+                                     Style="{StaticResource InputUserInfoTextBox}" />
+
+                        </Grid>
+
+                        <Button x:Name="CreateCaseConfirmButton"
+                                Content="Создать акт"
+                                Padding="15"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="CreateCaseConfirmButtonClick" />
+
+                        <Button x:Name="dUfpdateButton"
+                                Content="Обновить"
+                                Padding="15"
+                                Visibility="Collapsed"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="UpdateButton_Click" />
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="CreateActGrid"
+              Background="#3F000000"
+              Visibility="Collapsed"
+              Grid.RowSpan="2">
+
+            <Grid Width="500"
+                  Height="300">
+
+                <Border Padding="40"
+                        Background="White"
+                        CornerRadius="30">
+
+                    <StackPanel>
+
+                        <Button Width="25"
+                                Height="25"
+                                Content="×"
+                                HorizontalAlignment="Right"
+                                Click="CloseCreateActClick" />
+
+                        <TextBlock Text="Заполните данные"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Название:"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <TextBox x:Name="ActNameTextBox"
+                                     Grid.Column="1"
+                                     Grid.Row="0"
+                                     Style="{StaticResource InputUserInfoTextBox}" />
+
+                            <TextBlock Text="Том:"
+                                       Grid.Row="1"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <ComboBox x:Name="VolumeComboBox"
+                                      Grid.Column="1"
+                                      Grid.Row="1"
+                                      Margin="10,0,0,0" />
+
+                        </Grid>
+
+                        <Button x:Name="CreateActConfirmButton"
+                                Content="Создать"
+                                Padding="15"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="CreateActConfirmButtonClick" />
+
+                        <Button x:Name="dUpdateButton"
+                                Content="Обновить"
+                                Padding="15"
+                                Visibility="Collapsed"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="UpdateButton_Click" />
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="CreateVolumeGrid"
+              Background="#3F000000"
+              Visibility="Collapsed"
+              Grid.RowSpan="2">
+
+            <Grid Width="500"
+                  Height="300">
+
+                <Border Padding="40"
+                        Background="White"
+                        CornerRadius="30">
+
+                    <StackPanel>
+
+                        <Button Width="25"
+                                Height="25"
+                                Content="×"
+                                HorizontalAlignment="Right"
+                                Click="CloseCreateVolumeGridClick" />
+
+                        <TextBlock Text="Заполните данные"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Название:"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource TitleUserInfoTextBlock}" />
+
+                            <TextBox x:Name="VolumeNameTextBox"
+                                     Grid.Column="1"
+                                     Grid.Row="0"
+                                     Style="{StaticResource InputUserInfoTextBox}" />
+
+
+                        </Grid>
+
+                        <Button x:Name="CreateVolumeConfirmButton"
+                                Content="Создать"
+                                Padding="15"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="CreateVolumeConfirmButton_Click" />
+
+                        <Button x:Name="UpdateVolumeButton"
+                                Content="Обновить"
+                                Padding="15"
+                                Visibility="Collapsed"
+                                Margin="0 30 0 0"
+                                Style="{StaticResource DefaultButton}"
+                                Click="UpdateVolumeButtonClick" />
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="HelpGrid"
+              Background="#3F000000"
+              Visibility="Collapsed"
+              Grid.RowSpan="2">
+
+            <Grid Width="900"
+                  Height="500">
+
+                <Border Padding="40"
+                        Background="White"
+                        CornerRadius="30">
+
+                    <StackPanel>
+
+                        <Button Width="25"
+                                Height="25"
+                                Content="×"
+                                FontSize="16"
+                                HorizontalAlignment="Right"
+                                Background="#FFF2CC01"
+                                Click="CloseHelpGrid" />
+
+                        <TextBlock Text="О программе"
+                                   FontSize="25"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+
+                        <TextBlock x:Name="InfoTextBox"
+                                   TextWrapping="Wrap"
+                                   FontSize="19" />
+
 
                     </StackPanel>
                 </Border>
