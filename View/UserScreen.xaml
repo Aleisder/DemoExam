@@ -185,32 +185,39 @@
     <Grid Background="#FF27295A">
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="4*" />
+            <RowDefinition Height="3.9*" />
         </Grid.RowDefinitions>
 
 
         <Border CornerRadius="30"
                 Margin="40 40 40 0"
-                Padding="30"
+                Padding="25"
                 Background="White"
                 Grid.Row="0">
 
             <Grid>
 
-                <TextBlock x:Name="TextBlockUserName"
-                           FontSize="25"
-                           FontWeight="SemiBold"
-                           Text="Иванов Иван Иванович" />
+                <StackPanel Orientation="Vertical">
+                    
+                    <TextBlock x:Name="UserNameTextBlock"
+                               FontSize="25"
+                               FontWeight="SemiBold"
+                               Text="Иванов Иван Иванович" />
+
+                    <TextBlock x:Name="UserPositionTextBlock" 
+                               FontSize="20"
+                               Text="Администратор"/>
+
+                </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
                     <Image Source="/Images/icon-question.png"
-                           Margin="0 0 20 0"
+                           Margin="5 5 20 5"
                            MouseDown="HelpButtonClick" />
-
-                    <Image Source="/Images/icon-settings.png"
-                           Margin="0 0 20 0" />
+                    
                     <Image Source="/Images/icon-exit.png"
+                           Margin="5 5 0 5"
                            MouseDown="ExitClick" />
                 </StackPanel>
 

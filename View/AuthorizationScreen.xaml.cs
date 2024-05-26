@@ -1,4 +1,5 @@
-﻿using DemoExam.Repository;
+﻿using DemoExam.Model;
+using DemoExam.Repository;
 using DemoExam.View;
 using System.Windows;
 
@@ -21,7 +22,8 @@ namespace DemoExam
 
             else if (UserRepository.ValidateUser(login, password))
             {
-                ManagerScreen managerScreen = new(login);
+                User user = UserRepository.GetByLogin(login);
+                ManagerScreen managerScreen = new(user.Id);
                 managerScreen.Show();
                 Close();
             }

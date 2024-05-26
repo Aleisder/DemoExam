@@ -20,13 +20,14 @@ namespace DemoExam.View
         private Chapter CurrentChapter = Chapter.VOLUME;
         private int LastVisitedVolumeId = -1;
 
-        public ManagerScreen(string login)
+        public ManagerScreen(int userId)
         {
             InitializeComponent();
 
 
             InfoTextBox.Text = StaticData.Info;
-            CurrentUser = UserRepository.GetByLogin(login);
+            CurrentUser = UserRepository.GetById(userId);
+            SetUpUserInfo();
             LogService.AddLog(CurrentUser, LogEvent.LOG_IN);
 
             UserListView.ItemsSource = UserService.Users;
@@ -34,6 +35,13 @@ namespace DemoExam.View
             ArchiveListView.ItemTemplate = (DataTemplate)this.Resources["VolumeListItem"];
             
             ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
+        }
+
+        private void SetUpUserInfo()
+        {
+            UserNameTextBlock.Text = CurrentUser.ToString();
+            UserPositionTextBlock.Text = CurrentUser.Position;
+
         }
 
         private void OpenAddUserWindowClick(object sender, RoutedEventArgs e) => OpenAddUserWindow();
