@@ -1,5 +1,4 @@
-﻿using DemoExam.Model;
-using DemoExam.Repository;
+﻿using DemoExam.Repository;
 using DemoExam.View;
 using System.Windows;
 
@@ -7,8 +6,9 @@ namespace DemoExam
 {
     public partial class AuthorizationScreen : Window
     {
+        private readonly UserRepository UserRepository = new();
         public AuthorizationScreen() => InitializeComponent();
-
+ 
         private void EnterButtonClick(object sender, RoutedEventArgs e)
         {
             string login = loginField.Text;
@@ -20,9 +20,9 @@ namespace DemoExam
                 errorText.Visibility = Visibility.Visible;
             }
 
-            else if (UserRepository.ValidateUser(login, password))
+            var user = UserRepository.Validate(login, password);
+            if (user != null)
             {
-                User user = UserRepository.GetByLogin(login);
                 ManagerScreen managerScreen = new(user.Id);
                 managerScreen.Show();
                 Close();

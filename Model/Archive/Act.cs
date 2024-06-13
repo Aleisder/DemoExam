@@ -1,35 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DemoExam.Model.Archive
 {
-    [Table("Act")]
-    public class Act : ArchiveListItem
+    public class Act
     {
-        [Key]
-        [Required]
-        [Column("id")]
         public int Id { get; set; }
-
-        [Required]
-        [Column ("name")]
         public string Name { get; set; }
+        public List<Case> Cases { get; set; }
 
-        [Required]
-        [Column("volume_id")]
-        public int VolumeId { get; set; }
-
-        public Act(string name)
+        public Act(int id, string name, List<Case> cases)
         {
+            Id = id;
             Name = name;
+            Cases = cases;
         }
 
-        public override int GetId() => Id;
-
-        public override string GetName() => Name;
-
-        public override string GetCommand() => $"/act {Id}";
-
-        public override string ToString() => Name;
+        public int ClosedActs() => Cases.Where(x => x.IsClosed).Count();
+        public int OpenedActs() => Cases.Where(x => !x.IsClosed).Count();
     }
 }

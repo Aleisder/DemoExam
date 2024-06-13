@@ -1,37 +1,45 @@
-﻿using DemoExam.Model;
+﻿using DemoExam.Enums;
+using DemoExam.Model.UserPool;
 using DemoExam.Repository;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Windows.Documents;
 
 namespace DemoExam.Services
 {
     public class UserService
     {
-        public static readonly ObservableCollection<User> Users = new();
+        public readonly ObservableCollection<User> users = new();
+        private readonly UserRepository userRepository = new();
 
-        static UserService()
+        public UserService()
         {
-            UserRepository.GetAll().ForEach(x => Users.Add(x));
+            userRepository.GetAll().ForEach(x => users.Add(x));
         }
 
-        public static void AddUser(User user)
+        public void Add(User user)
         {
-            UserRepository.AddUser(user);
-            Users.Add(UserRepository.GetLast());
+            int userId = userRepository.Add(user);
+            User addedUser = userRepository.GetById(userId);
+            users.Add(addedUser);
         }
 
-        public static void UpdateUser(int index, User user)
+        public void Update(int index, User user)
         {
-            Users.RemoveAt(index);
-            Users.Insert(index, user);
-            UserRepository.UpdateUser(user);
+            users.RemoveAt(index);
+            users.Insert(index, user);
+            userRepository.Update(user);
         }
 
-        public static void DeleteUser(User user)
+        public void Delete(User user)
         {
-            Users.Remove(user);
-            UserRepository.DeleteUser(user);
+            users.Remove(user);
+            userRepository.Delete(user);
         }
+
+        public User GetById(int id) => userRepository.GetById(id);
+
+        public List<Role> GetRoles() => userRepository.GetRoles();
 
     }
 }

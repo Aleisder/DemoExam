@@ -1,54 +1,146 @@
-﻿using DemoExam.Configuration;
-using DemoExam.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using DemoExam.Model.UserPool;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace DemoExam.Repository
 {
-    public class UserRepository
+    public class UserRepository : Repository
     {
-        private static readonly SqlDatabase Context = new();
-
-        public static void AddUser(User user)
+        public int Add(User user)
         {
-            string query = "INSERT INTO [User] (first_name, last_name, login, password, position, role_id, created_at, updated_at) VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})";
-            Context.Database.ExecuteSqlRaw(query, user.Name, user.Surname, user.Login, user.Password, "aasdf", user.Role.Id, DateTime.Now, DateTime.Now);
-            Context.SaveChanges();
+            string query = "INSERT INTO [User] (first_name, last_name, login, password, role_id, created_at, updated_at) VALUES (@first_name, @last_name, @login, @password, @role_id, @created_at, @updated_at); SELECT CAST(SCOPE_IDENTITY() AS int)";
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            var command = new SqlCommand(query, connection);
+
+            var name = new SqlParameter("first_name", user.Name);
+            var lastName = new SqlParameter("last_name", user.Name);
+            var login = new SqlParameter("login", user.Login);
+            var password = new SqlParameter("password", user.Password);
+            var roleId = new SqlParameter("role_id", user.Role.Id);
+            var createdAt = new SqlParameter("created_at", user.CreatedAt);
+            var updatedAt = new SqlParameter("updated_at", user.UpdatedAt);
+
+            SqlParameter[] parameters = { name, lastName, login, password, roleId, createdAt, updatedAt };
+            command.Parameters.AddRange(parameters);
+
+            using var reader = command.ExecuteReader();
+
+            reader.Read();
+            int userId = reader.GetInt32(0);
+
+            reader.Close();
+            connection.Close();
+
+            return userId;
         }
 
-        public static List<User> GetAll() => Context.Users.ToList();
+        public List<User> GetAll()
+        {
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            string query = "SELECT * FROM [User]";
+            var roles = GetRoles();
+            var users = new List<User>();
+            var command = new SqlCommand(query, connection);
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string firstName = reader.GetString(1);
+                    string lastName = reader.GetString(2);
+                    string login = reader.GetString(3);
+                    string password = reader.GetString(4);
+                    int roleId = reader.GetInt32(5);
+                    DateTime createdAt = reader.GetDateTime(6);
+                    DateTime updatedAt = reader.GetDateTime(7);
 
-        public static User GetById(int id) => Context.Users.Where(x => x.Id == id).First();
+                    Role role = roles.Where(role => role.Id == roleId).First();
 
-        public static User GetLast() => Context
-            .Users
-            .OrderBy(it => it.Id)
-            .Last();
+                    var user = new User(id, firstName, lastName, login, password, role, createdAt, updatedAt);
+                    users.Add(user);
+                }
+            }
+            connection.Close();
+            return users;
+        }
 
-        public static User GetByLogin(string login) => Context
-            .Users
-            .Where(it => it.Login == login)
+        public List<Role> GetRoles()
+        {
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            string query = "SELECT * FROM [Role]";
+            SqlCommand command = new(query, connection);
+            var roles = new List<Role>();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string name = reader.GetString(1);
+
+                    var role = new Role(id, name);
+                    roles.Add(role);
+                }
+                reader.Close();
+            }
+            connection.Close();
+            return roles;
+        }
+
+        private Role GetRoleById(int id) => GetRoles().Where(role => role.Id == id).First();
+
+        public User GetById(int id) => 
+            GetAll()
+            .Where(user => user.Id == id)
             .First();
 
-        public static void UpdateUser(User user)
+        public void Update(User user)
         {
-            Context.Users.Update(user);
-            Context.SaveChanges();
+            string query = "UPDATE [User] SET first_name = @first_name, last_name = @last_name, login = @login, password = @password, role_id = @role_id, updated_at = @updated_at WHERE id = @id";
+            
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            var command = new SqlCommand(query, connection);
+
+            var firstName = new SqlParameter("first_name", user.Name);
+            var lastName = new SqlParameter("last_name", user.Name);
+            var login = new SqlParameter("login", user.Login);
+            var password = new SqlParameter("password", user.Password);
+            var roleId = new SqlParameter("role_id", user.Role.Id);
+            var updatedAt = new SqlParameter("updated_at", user.UpdatedAt);
+            var id = new SqlParameter("id", user.Id);
+
+            SqlParameter[] parameters = { firstName, lastName, login, password, roleId, updatedAt, id };
+            command.Parameters.AddRange(parameters);
+
+            command.ExecuteNonQuery();
+            connection.Close();
         }
 
-        public static bool ValidateUser(string login, string password) => Context
-            .Users
-            .Any(it => it.Login == login && it.Password == password);
-
-        public static void DeleteUser(User user)
+        public void Delete(User user)
         {
-            Context.Users.Remove(user);
-            Context.SaveChanges();
+            using var connection = new SqlConnection(connectionString);
+            string query = "DELETE FROM [User] WHERE id = @id";
+            var id = new SqlParameter("id", user.Id);
+            var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.Parameters.Add(id);
+            command.ExecuteNonQuery();
+            connection.Close();
         }
 
-        public static List<User> GetInvestigators() => Context.Users.Where(x => x.Position.ToLower().Contains("инспектор")).ToList();
+        public User Validate(string login, string password) =>
+            GetAll()
+            .Where(user => user.Login == login && user.Password == password)
+            .First();
 
+        public List<User> GetInvestigators() =>
+            GetAll()
+            .Where(user => user.Role.Name == "Следователь")
+            .ToList();
     }
 }

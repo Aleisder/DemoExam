@@ -1,13 +1,9 @@
 ﻿using DemoExam.Configuration;
-using DemoExam.Dto;
 using DemoExam.Enums;
-using DemoExam.Handlers;
-using DemoExam.Model;
 using DemoExam.Model.Archive;
+using DemoExam.Model.UserPool;
 using DemoExam.Repository;
 using DemoExam.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,33 +12,48 @@ namespace DemoExam.View
 {
     public partial class ManagerScreen : Window
     {
-        private readonly User CurrentUser = new();
+        private readonly UserService userService;
+        private readonly LogService logService = new();
+        private readonly User CurrentUser;
         private Chapter CurrentChapter = Chapter.VOLUME;
         private int LastVisitedVolumeId = -1;
 
         public ManagerScreen(int userId)
         {
             InitializeComponent();
-
+            userService = new();
+            CurrentUser = userService.GetById(userId);
 
             InfoTextBox.Text = StaticData.Info;
-            CurrentUser = UserRepository.GetById(userId);
             SetUpUserInfo();
-            LogService.AddLog(CurrentUser, LogEvent.LOG_IN);
+            LoadRoleComboBox();
+            logService.Add(CurrentUser, LogEvent.LOG_IN);
 
-            UserListView.ItemsSource = UserService.Users;
-            LogListView.ItemsSource = LogService.Logs;
+            UserDataGrid.ItemsSource = userService.users;
+            UserListView.Visibility = Visibility.Collapsed;
+
+            //UserListView.ItemsSource = userService.users;
+            LogListView.ItemsSource = logService.logs;
             ArchiveListView.ItemTemplate = (DataTemplate)this.Resources["VolumeListItem"];
-            
             ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
         }
 
         private void SetUpUserInfo()
         {
             UserNameTextBlock.Text = CurrentUser.ToString();
-            UserPositionTextBlock.Text = CurrentUser.Position;
+            UserPositionTextBlock.Text = CurrentUser.Role.Name;
+        }
+
+        private void SetUpRole(Role role)
+        {
+            switch (role.Name)
+            {
+
+            }
 
         }
+
+        private void LoadRoleComboBox() => RoleComboBox.ItemsSource = userService.GetRoles();
 
         private void OpenAddUserWindowClick(object sender, RoutedEventArgs e) => OpenAddUserWindow();
 
@@ -67,26 +78,23 @@ namespace DemoExam.View
             NameTextBox.Clear();
             LoginTextBox.Clear();
             PasswordTextBox.Clear();
-            PositionTextBox.Clear();
             RoleComboBox.Text = "";
         }
 
         private void ConfirmUserClick(object sender, RoutedEventArgs e)
         {
-            var role = Role.CreateFromValue(RoleComboBox.Text);
+            var role = (Role)RoleComboBox.SelectedItem;
 
-            var user = new User()
-            {
-                Name = NameTextBox.Text.Trim(),
-                Surname = SurnameTextxBox.Text.Trim(),
-                Login = LoginTextBox.Text.Trim(),
-                Password = PasswordTextBox.Text.Trim(),
-                Role = role,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-            UserService.AddUser(user);
-            LogService.AddLog(user, LogEvent.CREATE);
+            var user = new User(
+                NameTextBox.Text.Trim(),
+                SurnameTextxBox.Text.Trim(),
+                LoginTextBox.Text.Trim(),
+                PasswordTextBox.Text.Trim(),
+                role
+            );
+
+            userService.Add(user);
+            logService.Add(user, LogEvent.CREATE);
             CloseAddUserWindow();
             ClearTextBoxes();
         }
@@ -96,7 +104,7 @@ namespace DemoExam.View
             var result = MessageBox.Show("Вы действительно хотите выйти из учётной записи?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                LogService.AddLog(CurrentUser, LogEvent.LOG_OUT);
+                logService.Add(CurrentUser, LogEvent.LOG_OUT);
                 var screen = new AuthorizationScreen();
                 screen.Show();
                 Close();
@@ -109,11 +117,11 @@ namespace DemoExam.View
             if (result == MessageBoxResult.Yes)
             {
                 int index = UserListView.SelectedIndex;
-                User user = UserService.Users.ElementAt(index);
+                User user = userService.users.ElementAt(index);
                 if (user != null)
                 {
-                    UserService.DeleteUser(user);
-                    LogService.AddLog(user, LogEvent.DELETE);
+                    userService.Delete(user);
+                    logService.Add(user, LogEvent.DELETE);
                 }
             }
         }
@@ -154,7 +162,7 @@ namespace DemoExam.View
             SurnameTextxBox.Text = selectedUser.Surname;
             LoginTextBox.Text = selectedUser.Login;
             PasswordTextBox.Text = selectedUser.Password;
-            RoleComboBox.Text = selectedUser.Role == null ? "" : selectedUser.Role.Value;
+            RoleComboBox.SelectedItem = selectedUser.Role;
             RequestButton.Visibility = Visibility.Collapsed;
             UpdateButton.Visibility = Visibility.Visible;
             RequestGrid.Visibility = Visibility.Visible;
@@ -165,47 +173,47 @@ namespace DemoExam.View
             User selectedUser = (User)UserListView.SelectedItem;
             selectedUser.Name = NameTextBox.Text;
             selectedUser.Surname = SurnameTextxBox.Text;
-            selectedUser.Position = PositionTextBox.Text;
             selectedUser.Password = PasswordTextBox.Text;
             selectedUser.Login = LoginTextBox.Text;
+            selectedUser.Role = (Role)RoleComboBox.SelectedItem;
 
             int index = UserListView.SelectedIndex;
 
-            UserService.UpdateUser(index, selectedUser);
-            LogService.AddLog(selectedUser, LogEvent.UPDATE);
+            userService.Update(index, selectedUser);
+            logService.Add(selectedUser, LogEvent.UPDATE);
 
             CloseAddUserWindow();
         }
 
         private void ArchiveListViewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var index = ArchiveListView.SelectedIndex;
+            //var index = ArchiveListView.SelectedIndex;
 
-            switch (CurrentChapter)
-            {
-                case Chapter.ACT:
-                    ActDto act = (ActDto)ArchiveListView.Items.GetItemAt(index);
-                    LastVisitedVolumeId = act.Id;
-                    List<CaseDto> cases = ArchiveService.GetCasesByActId(act.Id);
-                    ArchiveListView.ItemTemplate = (DataTemplate)Resources["CaseListItem"];
-                    ArchiveListView.ItemsSource = cases;
-                    CurrentChapter = Chapter.CASE;
-                    break;
+            //switch (CurrentChapter)
+            //{
+            //    case Chapter.ACT:
+            //        ActDto act = (ActDto)ArchiveListView.Items.GetItemAt(index);
+            //        LastVisitedVolumeId = act.Id;
+            //        List<CaseDto> cases = ArchiveService.GetCasesByActId(act.Id);
+            //        ArchiveListView.ItemTemplate = (DataTemplate)Resources["CaseListItem"];
+            //        ArchiveListView.ItemsSource = cases;
+            //        CurrentChapter = Chapter.CASE;
+            //        break;
 
-                case Chapter.CASE:
-                    Case caseItem = (Case)ArchiveListView.Items.GetItemAt(index);
-                    OfficeService.CreateDocument(caseItem);
-                    break;
+            //    case Chapter.CASE:
+            //        Case caseItem = (Case)ArchiveListView.Items.GetItemAt(index);
+            //        OfficeService.CreateDocument(caseItem);
+            //        break;
 
-                default:
-                    VolumeDto item = (VolumeDto)ArchiveListView.Items.GetItemAt(index);
-                    Volume volume = ArchiveRepository.GetVolumeByName(item.Name);
-                    List<ActDto> acts = ArchiveService.GetActsByVolumeId(volume.Id);
-                    ArchiveListView.ItemTemplate = (DataTemplate)Resources["ActListItem"];
-                    ArchiveListView.ItemsSource = acts;
-                    CurrentChapter = Chapter.ACT;
-                    break;
-            }
+            //    default:
+            //        VolumeDto item = (VolumeDto)ArchiveListView.Items.GetItemAt(index);
+            //        Volume volume = ArchiveRepository.GetVolumeByName(item.Name);
+            //        List<ActDto> acts = ArchiveService.GetActsByVolumeId(volume.Id);
+            //        ArchiveListView.ItemTemplate = (DataTemplate)Resources["ActListItem"];
+            //        ArchiveListView.ItemsSource = acts;
+            //        CurrentChapter = Chapter.ACT;
+            //        break;
+            //}
 
         }
 
@@ -239,7 +247,7 @@ namespace DemoExam.View
 
         private void LoadVolumeComboBoxItems()
         {
-            ArchiveRepository.GetVolumes().ForEach(volume => VolumeComboBox.Items.Add(volume.Name));
+            //ArchiveRepository.GetVolumes().ForEach(volume => VolumeComboBox.Items.Add(volume.Name));
         }
 
         private void CreateActConfirmButtonClick(object sender, RoutedEventArgs e)
@@ -278,7 +286,7 @@ namespace DemoExam.View
             CaseIntruderTextBox.Clear();
 
         }
-        
+
         private void CloseCreateCaseClick(object sender, RoutedEventArgs e) => CloseCreateCase();
 
         private void CaseVolumeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -288,7 +296,8 @@ namespace DemoExam.View
                 Volume selectedVolume = ArchiveRepository.GetVolumeByName(e.AddedItems[0].ToString());
                 CaseActComboBox.Items.Clear();
                 ArchiveRepository.GetActsByVolumeId(selectedVolume.Id).ForEach(x => CaseActComboBox.Items.Add(x));
-            } else
+            }
+            else
             {
                 CaseActComboBox.Items.Clear();
             }
@@ -296,23 +305,23 @@ namespace DemoExam.View
 
         private void OpenCreateCaseWindow()
         {
-            CreateCaseGrid.Visibility = Visibility.Visible;
+            //CreateCaseGrid.Visibility = Visibility.Visible;
 
-            CaseVolumeComboBox.Items.Clear();
-            ArchiveRepository.GetVolumes().ForEach(x => CaseVolumeComboBox.Items.Add(x.Name));
-            
-            SectionComboBox.Items.Clear();
-            SectionRepository.GetSections().ForEach(x => SectionComboBox.Items.Add(x));
+            //CaseVolumeComboBox.Items.Clear();
+            //ArchiveRepository.GetVolumes().ForEach(x => CaseVolumeComboBox.Items.Add(x.Name));
 
-            InvestigatorComboBox.Items.Clear();
-            UserRepository.GetInvestigators().ForEach(x => InvestigatorComboBox.Items.Add(x)); 
+            //SectionComboBox.Items.Clear();
+            //SectionRepository.GetSections().ForEach(x => SectionComboBox.Items.Add(x));
+
+            //InvestigatorComboBox.Items.Clear();
+            //UserRepository.GetInvestigators().ForEach(x => InvestigatorComboBox.Items.Add(x));
         }
 
         private void CreateCaseButtonClick(object sender, RoutedEventArgs e) => OpenCreateCaseWindow();
 
         private void ArchiveBackButtonClick(object sender, RoutedEventArgs e)
         {
-            switch(CurrentChapter)
+            switch (CurrentChapter)
             {
                 case Chapter.ACT:
                     CurrentChapter = Chapter.VOLUME;
@@ -328,66 +337,66 @@ namespace DemoExam.View
 
         private void CreateCaseConfirmButtonClick(object sender, RoutedEventArgs e)
         {
-            Act parentAct = (Act)CaseActComboBox.SelectedItem;
-            string name = CaseNameTextBox.Text;
-            string intruder = CaseIntruderTextBox.Text;
-            User investigator = (User)InvestigatorComboBox.SelectedItem;
-            Section section = (Section )SectionComboBox.SelectedItem;
-            string evidence = EvidenceTextBox.Text;
+            //Act parentAct = (Act)CaseActComboBox.SelectedItem;
+            //string name = CaseNameTextBox.Text;
+            //string intruder = CaseIntruderTextBox.Text;
+            //User investigator = (User)InvestigatorComboBox.SelectedItem;
+            //Section section = (Section)SectionComboBox.SelectedItem;
+            //string evidence = EvidenceTextBox.Text;
 
-            Case newCase = new Case(parentAct.Id, name, intruder, investigator.Id, section.Id, evidence);
+            //Case newCase = new Case(parentAct.Id, name, intruder, investigator.Id, section.Id, evidence);
 
-            ArchiveRepository.AddCase(newCase);
-            CloseCreateCase();
+            //ArchiveRepository.AddCase(newCase);
+            //CloseCreateCase();
 
-            MessageBox.Show("Вы завели новое дело!", "Создание дела");
+            //MessageBox.Show("Вы завели новое дело!", "Создание дела");
         }
 
         private void DeleteVolumeButtonClick(object sender, RoutedEventArgs e)
         {
-            if (ArchiveListView.SelectedItem != null)
-            {
-                var result = MessageBox.Show("Вы действительно хотите удалить пользователя?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    VolumeDto volumeDto = (VolumeDto)ArchiveListView.SelectedItem;
-                    ArchiveRepository.DeleteVolumeById(volumeDto.Id);
-                    ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
-                }
-            }
+            //if (ArchiveListView.SelectedItem != null)
+            //{
+            //    var result = MessageBox.Show("Вы действительно хотите удалить пользователя?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //    if (result == MessageBoxResult.Yes)
+            //    {
+            //        VolumeDto volumeDto = (VolumeDto)ArchiveListView.SelectedItem;
+            //        ArchiveRepository.DeleteVolumeById(volumeDto.Id);
+            //        ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
+            //    }
+            //}
         }
 
         private void DeleteActButtonClick(object sender, RoutedEventArgs e)
         {
-            if (ArchiveListView.SelectedItem != null)
-            {
-                var result = MessageBox.Show("Вы действительно хотите удалить акт?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    ActDto actDto = (ActDto)ArchiveListView.SelectedItem;
-                    Act act = ArchiveRepository.GetActById(actDto.Id);
-                    ArchiveRepository.DeleteActById(act.Id);
-                    ArchiveListView.ItemsSource = ArchiveService.GetActsByVolumeId(act.VolumeId);
-                }
-            }
+            //if (ArchiveListView.SelectedItem != null)
+            //{
+            //    var result = MessageBox.Show("Вы действительно хотите удалить акт?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //    if (result == MessageBoxResult.Yes)
+            //    {
+            //        Act actDto = (Act)ArchiveListView.SelectedItem;
+            //        Act act = ArchiveRepository.GetActById(actDto.Id);
+            //        ArchiveRepository.DeleteActById(act.Id);
+            //        ArchiveListView.ItemsSource = ArchiveService.GetActsByVolumeId(act.VolumeId);
+            //    }
+            //}
         }
 
         private void UpdateVolumeButtonClick(object sender, RoutedEventArgs e)
         {
-            VolumeDto volume = (VolumeDto)ArchiveListView.SelectedItem;
-            Volume editedVolume = new Volume(volume.Id, VolumeNameTextBox.Text);
-            ArchiveRepository.UpdateVolume(editedVolume);
+            //Volume volume = (Volume)ArchiveListView.SelectedItem;
+            //Volume editedVolume = new Volume(volume.Id, VolumeNameTextBox.Text);
+            //ArchiveRepository.UpdateVolume(editedVolume);
 
-            CreateVolumeGrid.Visibility = Visibility.Collapsed;
-            CreateVolumeButton.Visibility = Visibility.Visible;
-            UpdateVolumeButton.Visibility = Visibility.Collapsed;
+            //CreateVolumeGrid.Visibility = Visibility.Collapsed;
+            //CreateVolumeButton.Visibility = Visibility.Visible;
+            //UpdateVolumeButton.Visibility = Visibility.Collapsed;
 
-            ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
+            //ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
         }
 
         private void EditVolumeButtonClick(object sender, RoutedEventArgs e)
         {
-            VolumeDto volume = (VolumeDto)ArchiveListView.SelectedItem;
+            Volume volume = (Volume)ArchiveListView.SelectedItem;
 
             CreateVolumeGrid.Visibility = Visibility.Visible;
             CreateVolumeButton.Visibility = Visibility.Collapsed;

@@ -1,5 +1,6 @@
 ﻿using DemoExam.Enums;
-using DemoExam.Model;
+using DemoExam.Model.Log;
+using DemoExam.Model.UserPool;
 using DemoExam.Repository;
 using System.Collections.ObjectModel;
 
@@ -7,14 +8,15 @@ namespace DemoExam.Services
 {
     public class LogService
     {
-        public static readonly ObservableCollection<Log> Logs = new();
+        public readonly ObservableCollection<Log> logs = new();
+        private readonly LogRepository logRepository = new();
 
-        static LogService()
+        public LogService()
         {
-            LogRepository.GetAll().ForEach(log => Logs.Add(log));
+            logRepository.GetAll().ForEach(log => logs.Add(log));
         }
 
-        public static void AddLog(User user, LogEvent logEvent)
+        public void Add(User user, LogEvent logEvent)
         {
             string message = logEvent switch
             {
@@ -25,8 +27,8 @@ namespace DemoExam.Services
                 LogEvent.LOG_OUT => $"Выход из аккаунта [ID: {user.Id}, Логин: {user.Login}]",
                 _ => "ОШИБКА. Неожидаемый лог"
             };
-            LogRepository.AddLog("UserRepository", message);
-            Logs.Add(LogRepository.GetLast());
+            int id = logRepository.Add("UserRepository", message);
+            logs.Add(logRepository.GetById(id));
         }
 
     }

@@ -1,16 +1,16 @@
-﻿using DemoExam.Model;
-using DemoExam.Model.Archive;
+﻿using DemoExam.Model.Archive;
+using DemoExam.Model.UserPool;
 using DemoExam.Repository;
 using Microsoft.Office.Interop.Word;
-using System;
-using System.Windows;
 using Word = Microsoft.Office.Interop.Word.Application;
 
 namespace DemoExam.Services
 {
     public class OfficeService
     {
-        public static void CreateDocument(Case item)
+        private readonly UserService userService = new();
+
+        public void CreateDocument(Case item)
         {
             //Create an instance for word app
             Word word = new();
@@ -62,7 +62,7 @@ namespace DemoExam.Services
             intruder.Range.InsertParagraphAfter();
 
             Paragraph investigator = document.Content.Paragraphs.Add(ref missing);
-            User user = UserRepository.GetById(item.InvestigatorId);
+            User user = userService.GetById(item.Investigator.Id);
             investigator.Range.Text = $"Следователь: {user.Surname} {user.Name}";
             investigator.Range.Font.Name = "Times New Roman";
             investigator.Range.Font.Size = 14;

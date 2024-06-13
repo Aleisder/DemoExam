@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTemplates\**" />
+    <EmbeddedResource Remove="DataTemplates\**" />
+    <None Remove="DataTemplates\**" />
+    <Page Remove="DataTemplates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\gerb-mvd.png" />
     <None Remove="Images\icon-add.png" />
     <None Remove="Images\icon-delete.png" />
@@ -42,8 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="5.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
@@ -73,11 +79,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DataTemplates\" />
-    <Folder Include="Model\UserPool\" />
   </ItemGroup>
 
 </Project>

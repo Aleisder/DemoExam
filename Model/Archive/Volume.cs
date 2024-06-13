@@ -1,33 +1,27 @@
-﻿using Microsoft.Identity.Client;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Sockets;
-
+﻿using System.Collections.Generic;
 
 namespace DemoExam.Model.Archive
 {
-    [Table("Volume")]
-    public class Volume : ArchiveListItem
+    public class Volume
     {
-        [Key]
-        [Required]
-        [Column("id")]
         public int Id { get; set; }
-
-        [Required]
-        [Column ("name")]
         public string Name { get; set; }
+        public List<Act> Acts { get; set; }
 
-        public Volume(int id, string name)
+        public Volume(int id, string name, List<Act> acts)
         {
             Id = id;
             Name = name;
+            Acts = acts;
         }
 
-        public override int GetId() => Id;
-
-        public override string GetName() => Name;
-
-        public override string GetCommand() => $"/volume {Id}";
+        // сколько дел внутри тома
+        public int GetCaseCount()
+        {
+            int counter = 0;
+            foreach (Act act in Acts)
+                counter += act.Cases.Count;
+            return counter;
+        }
     }
 }
