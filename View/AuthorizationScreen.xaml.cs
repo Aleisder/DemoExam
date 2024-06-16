@@ -6,7 +6,7 @@ namespace DemoExam
 {
     public partial class AuthorizationScreen : Window
     {
-        private readonly UserRepository UserRepository = new();
+        private readonly UserRepository userRepository = new();
         public AuthorizationScreen() => InitializeComponent();
  
         private void EnterButtonClick(object sender, RoutedEventArgs e)
@@ -20,10 +20,11 @@ namespace DemoExam
                 errorText.Visibility = Visibility.Visible;
             }
 
-            var user = UserRepository.Validate(login, password);
-            if (user != null)
+            var user = userRepository.Validate(login, password);
+            if (userRepository.Validate(login, password))
             {
-                ManagerScreen managerScreen = new(user.Id);
+
+                ManagerScreen managerScreen = new(userRepository.GetByLogin(login).Id);
                 managerScreen.Show();
                 Close();
             }

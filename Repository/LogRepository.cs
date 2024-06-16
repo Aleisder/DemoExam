@@ -10,7 +10,6 @@ namespace DemoExam.Repository
         public List<Log> GetAll()
         {
             string query = "SELECT * FROM [Log]";
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             using var command = new SqlCommand(query, connection);
             using var reader = command.ExecuteReader();
@@ -31,7 +30,6 @@ namespace DemoExam.Repository
             var moduleParam = new SqlParameter("module", module);
             var descriptionParam = new SqlParameter("description", description);
             SqlParameter[] parameters = { moduleParam, descriptionParam };
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             var command = new SqlCommand(query, connection);
             command.Parameters.AddRange(parameters);

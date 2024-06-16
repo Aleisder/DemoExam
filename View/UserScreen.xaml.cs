@@ -15,8 +15,6 @@ namespace DemoExam.View
         private readonly UserService userService;
         private readonly LogService logService = new();
         private readonly User CurrentUser;
-        private Chapter CurrentChapter = Chapter.VOLUME;
-        private int LastVisitedVolumeId = -1;
 
         public ManagerScreen(int userId)
         {
@@ -34,8 +32,6 @@ namespace DemoExam.View
 
             //UserListView.ItemsSource = userService.users;
             LogListView.ItemsSource = logService.logs;
-            ArchiveListView.ItemTemplate = (DataTemplate)this.Resources["VolumeListItem"];
-            ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
         }
 
         private void SetUpUserInfo()
@@ -221,7 +217,7 @@ namespace DemoExam.View
         {
             string name = VolumeNameTextBox.Text;
             ArchiveService.AddVolume(name);
-            ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
+            //ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
             CloseCreateVolumeDialog();
         }
 
@@ -321,18 +317,7 @@ namespace DemoExam.View
 
         private void ArchiveBackButtonClick(object sender, RoutedEventArgs e)
         {
-            switch (CurrentChapter)
-            {
-                case Chapter.ACT:
-                    CurrentChapter = Chapter.VOLUME;
-                    ArchiveListView.ItemTemplate = (DataTemplate)Resources["VolumeListItem"];
-                    ArchiveListView.ItemsSource = ArchiveService.GetVolumes();
-                    break;
-                case Chapter.CASE:
-                    CurrentChapter = Chapter.ACT;
-                    ArchiveListView.ItemsSource = ArchiveRepository.GetActsByVolumeId(LastVisitedVolumeId);
-                    break;
-            }
+
         }
 
         private void CreateCaseConfirmButtonClick(object sender, RoutedEventArgs e)
@@ -396,13 +381,13 @@ namespace DemoExam.View
 
         private void EditVolumeButtonClick(object sender, RoutedEventArgs e)
         {
-            Volume volume = (Volume)ArchiveListView.SelectedItem;
+            //Volume volume = (Volume)ArchiveListView.SelectedItem;
 
-            CreateVolumeGrid.Visibility = Visibility.Visible;
-            CreateVolumeButton.Visibility = Visibility.Collapsed;
-            UpdateVolumeButton.Visibility = Visibility.Visible;
+            //CreateVolumeGrid.Visibility = Visibility.Visible;
+            //CreateVolumeButton.Visibility = Visibility.Collapsed;
+            //UpdateVolumeButton.Visibility = Visibility.Visible;
 
-            VolumeNameTextBox.Text = volume.Name;
+            //VolumeNameTextBox.Text = volume.Name;
         }
     }
 }

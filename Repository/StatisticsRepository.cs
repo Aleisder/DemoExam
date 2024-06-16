@@ -7,7 +7,6 @@ namespace DemoExam.Repository
 
         public int AllCount()
         {
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             string query = "SELECT COUNT(*) AS 'all' FROM [Case]";
             var command = new SqlCommand(query, connection);
@@ -21,7 +20,6 @@ namespace DemoExam.Repository
 
         public int ClosedCount()
         {
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             string query = "SELECT COUNT(*) AS 'closed' FROM [Case] WHERE is_closed = 1";
             var command = new SqlCommand(query, connection);

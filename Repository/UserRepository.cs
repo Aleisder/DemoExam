@@ -11,10 +11,8 @@ namespace DemoExam.Repository
         public int Add(User user)
         {
             string query = "INSERT INTO [User] (first_name, last_name, login, password, role_id, created_at, updated_at) VALUES (@first_name, @last_name, @login, @password, @role_id, @created_at, @updated_at); SELECT CAST(SCOPE_IDENTITY() AS int)";
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             var command = new SqlCommand(query, connection);
-
             var name = new SqlParameter("first_name", user.Name);
             var lastName = new SqlParameter("last_name", user.Name);
             var login = new SqlParameter("login", user.Login);
@@ -39,38 +37,33 @@ namespace DemoExam.Repository
 
         public List<User> GetAll()
         {
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
-            string query = "SELECT * FROM [User]";
-            var roles = GetRoles();
+            string query = "SELECT [User].[id], first_name, last_name, login, password, role_id, [Role].[name], created_at, updated_at FROM [User] JOIN [Role] ON [Role].id = [User].[role_id];";
             var users = new List<User>();
             var command = new SqlCommand(query, connection);
-            using (var reader = command.ExecuteReader())
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                while (reader.Read())
-                {
-                    int id = reader.GetInt32(0);
-                    string firstName = reader.GetString(1);
-                    string lastName = reader.GetString(2);
-                    string login = reader.GetString(3);
-                    string password = reader.GetString(4);
-                    int roleId = reader.GetInt32(5);
-                    DateTime createdAt = reader.GetDateTime(6);
-                    DateTime updatedAt = reader.GetDateTime(7);
+                int id = reader.GetInt32(0);
+                string firstName = reader.GetString(1);
+                string lastName = reader.GetString(2);
+                string login = reader.GetString(3);
+                string password = reader.GetString(4);
+                int roleId = reader.GetInt32(5);
+                string roleName = reader.GetString(6);
+                DateTime createdAt = reader.GetDateTime(7);
+                DateTime updatedAt = reader.GetDateTime(8);
 
-                    Role role = roles.Where(role => role.Id == roleId).First();
-
-                    var user = new User(id, firstName, lastName, login, password, role, createdAt, updatedAt);
-                    users.Add(user);
-                }
+                var user = new User(id, firstName, lastName, login, password, new Role(roleId, roleName), createdAt, updatedAt);
+                users.Add(user);
             }
+            reader.Close();
             connection.Close();
             return users;
         }
 
         public List<Role> GetRoles()
         {
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             string query = "SELECT * FROM [Role]";
             SqlCommand command = new(query, connection);
@@ -93,7 +86,7 @@ namespace DemoExam.Repository
 
         private Role GetRoleById(int id) => GetRoles().Where(role => role.Id == id).First();
 
-        public User GetById(int id) => 
+        public User GetById(int id) =>
             GetAll()
             .Where(user => user.Id == id)
             .First();
@@ -101,8 +94,6 @@ namespace DemoExam.Repository
         public void Update(User user)
         {
             string query = "UPDATE [User] SET first_name = @first_name, last_name = @last_name, login = @login, password = @password, role_id = @role_id, updated_at = @updated_at WHERE id = @id";
-            
-            using var connection = new SqlConnection(connectionString);
             connection.Open();
             var command = new SqlCommand(query, connection);
 
@@ -123,7 +114,6 @@ namespace DemoExam.Repository
 
         public void Delete(User user)
         {
-            using var connection = new SqlConnection(connectionString);
             string query = "DELETE FROM [User] WHERE id = @id";
             var id = new SqlParameter("id", user.Id);
             var command = new SqlCommand(query, connection);
@@ -133,10 +123,11 @@ namespace DemoExam.Repository
             connection.Close();
         }
 
-        public User Validate(string login, string password) =>
+        public bool Validate(string login, string password) =>
             GetAll()
-            .Where(user => user.Login == login && user.Password == password)
-            .First();
+            .Any(user => user.Login == login && user.Password == password);
+
+        public User GetByLogin(string login) => GetAll().Where(user => user.Login == login).First();
 
         public List<User> GetInvestigators() =>
             GetAll()

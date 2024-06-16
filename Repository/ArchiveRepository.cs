@@ -25,7 +25,7 @@ namespace DemoExam.Repository
                 RIGHT JOIN [Act] ON [Case].[act_id] = [Act].[id];
             ";
 
-            using var connection = new SqlConnection(connectionString);
+         
             using var command = new SqlCommand(query, connection);
             using var reader = command.ExecuteReader();
             var volumes = new List<Volume>();
@@ -42,7 +42,7 @@ namespace DemoExam.Repository
 
         public List<Section> GetSections()
         {
-            using var connection = new SqlConnection(connectionString);
+        
             connection.Open();
             string query = "SELECT * FROM [Section]";
             using var command = new SqlCommand(query, connection);
