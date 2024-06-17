@@ -24,12 +24,14 @@ namespace DemoExam.View
 
             InfoTextBox.Text = StaticData.Info;
             SetUpUserInfo();
+            SetUpRole(CurrentUser.Role);
             LoadRoleComboBox();
             logService.Add(CurrentUser, LogEvent.LOG_IN);
 
             UserDataGrid.ItemsSource = userService.users;
 
             LogListView.ItemsSource = logService.logs;
+
         }
 
         private void SetUpUserInfo()
@@ -40,9 +42,12 @@ namespace DemoExam.View
 
         private void SetUpRole(Role role)
         {
-            switch (role.Name)
+            if (role.Name == "Следователь")
             {
-
+                AddUserButton.Visibility = Visibility.Collapsed;
+                UpdateButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
+                LogsTabItem.Visibility = Visibility.Collapsed;
             }
 
         }

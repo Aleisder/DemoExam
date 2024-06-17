@@ -3,16 +3,27 @@ using DemoExam.Model.UserPool;
 using DemoExam.Repository;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Animation;
 
 namespace DemoExam.Services
 {
-    internal class ArchiveService
+    public class ArchiveService
     {
         public static readonly ObservableCollection<Volume> Volumes = new();
 
-        static ArchiveService()
+        public ArchiveService()
         {
             //ArchiveRepository.GetVolumes().ForEach(volume => Volumes.Add(volume));
+        }
+
+        public static List<MenuItem> GetItems()
+        {
+            var menu = new List<MenuItem>();
+            foreach (var item in Volumes)
+            {
+                menu.Add(new MenuItem(item.Name));
+            }
+            return menu;
         }
 
         public static void AddVolume(string name)

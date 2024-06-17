@@ -243,7 +243,8 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">
 
-                            <Button Style="{StaticResource DefaultButton}"
+                            <Button x:Name="AddUserButton"
+                                Style="{StaticResource DefaultButton}"
                                     Click="OpenAddUserWindowClick"
                                     Padding="10"
                                     Margin="0 0 10 0">
@@ -366,12 +367,48 @@
                                     Click="ArchiveBackButtonClick" />
                         </StackPanel>
 
-                        <TreeView x:Name="ArchiveTreeView" Height="350">
-                            <TreeView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}" />
-                                </DataTemplate>
-                            </TreeView.ItemTemplate>
+                        <TreeView x:Name="ArchiveTreeView"
+                                  Height="350">
+                            <TreeViewItem Header="Том 2020">
+                                <TreeViewItem Header="Акт март">
+                                    <TreeViewItem Header="Дело 5833" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Акт апрель" />
+                                <TreeViewItem Header="Акт май" />
+                                <TreeViewItem Header="Акт июнь" />
+                            </TreeViewItem>
+                            <TreeViewItem Header="Том 2021">
+                                <TreeViewItem Header="Акт март">
+                                    <TreeViewItem Header="Дело 5833" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Акт апрель" />
+                                <TreeViewItem Header="Акт май" />
+                                <TreeViewItem Header="Акт июнь" />
+                            </TreeViewItem>
+                            <TreeViewItem Header="Том 2022">
+                                <TreeViewItem Header="Акт март">
+                                    <TreeViewItem Header="Дело 5833" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Акт апрель" />
+                                <TreeViewItem Header="Акт май" />
+                                <TreeViewItem Header="Акт июнь" />
+                            </TreeViewItem>
+                            <TreeViewItem Header="Том 2023">
+                                <TreeViewItem Header="Акт март">
+                                    <TreeViewItem Header="Дело 5833" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Акт апрель" />
+                                <TreeViewItem Header="Акт май" />
+                                <TreeViewItem Header="Акт июнь" />
+                            </TreeViewItem>
+                            <TreeViewItem Header="Том 2024">
+                                <TreeViewItem Header="Акт март">
+                                    <TreeViewItem Header="Дело 5833" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Акт апрель" />
+                                <TreeViewItem Header="Акт май" />
+                                <TreeViewItem Header="Акт июнь" />
+                            </TreeViewItem>
                         </TreeView>
 
                     </StackPanel>
@@ -384,7 +421,8 @@
                 </TabItem>
 
                 <TabItem Header="Логи"
-                         Style="{StaticResource DefaultTabItem}">
+                         Style="{StaticResource DefaultTabItem}"
+                         x:Name="LogsTabItem">
 
                     <ListView x:Name="LogListView">
                         <ListView.View>
