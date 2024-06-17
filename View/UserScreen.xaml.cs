@@ -28,9 +28,7 @@ namespace DemoExam.View
             logService.Add(CurrentUser, LogEvent.LOG_IN);
 
             UserDataGrid.ItemsSource = userService.users;
-            UserListView.Visibility = Visibility.Collapsed;
 
-            //UserListView.ItemsSource = userService.users;
             LogListView.ItemsSource = logService.logs;
         }
 
@@ -112,30 +110,13 @@ namespace DemoExam.View
             var result = MessageBox.Show("Вы действительно хотите удалить пользователя?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                int index = UserListView.SelectedIndex;
+                int index = UserDataGrid.SelectedIndex;
                 User user = userService.users.ElementAt(index);
                 if (user != null)
                 {
                     userService.Delete(user);
                     logService.Add(user, LogEvent.DELETE);
                 }
-            }
-        }
-
-        private void UserListItemClick(object sender, SelectionChangedEventArgs e)
-        {
-            switch (UserListView.SelectedItems.Count)
-            {
-                case 0:
-                    DisableEditAndDeleteButtons();
-                    break;
-                case 1:
-                    EnableEditAndDeleteButtons();
-                    break;
-                default:
-                    EditButton.IsEnabled = false;
-                    DeleteButton.IsEnabled = true;
-                    break;
             }
         }
 
@@ -153,7 +134,7 @@ namespace DemoExam.View
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            User selectedUser = (User)UserListView.SelectedItem;
+            User selectedUser = (User)UserDataGrid.SelectedItem;
             NameTextBox.Text = selectedUser.Name;
             SurnameTextxBox.Text = selectedUser.Surname;
             LoginTextBox.Text = selectedUser.Login;
@@ -166,14 +147,14 @@ namespace DemoExam.View
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            User selectedUser = (User)UserListView.SelectedItem;
+            User selectedUser = (User)UserDataGrid.SelectedItem;
             selectedUser.Name = NameTextBox.Text;
             selectedUser.Surname = SurnameTextxBox.Text;
             selectedUser.Password = PasswordTextBox.Text;
             selectedUser.Login = LoginTextBox.Text;
             selectedUser.Role = (Role)RoleComboBox.SelectedItem;
 
-            int index = UserListView.SelectedIndex;
+            int index = UserDataGrid.SelectedIndex;
 
             userService.Update(index, selectedUser);
             logService.Add(selectedUser, LogEvent.UPDATE);
@@ -388,6 +369,19 @@ namespace DemoExam.View
             //UpdateVolumeButton.Visibility = Visibility.Visible;
 
             //VolumeNameTextBox.Text = volume.Name;
+        }
+
+        private void UserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (UserDataGrid.SelectedItems.Count == 1)
+            {
+                EnableEditAndDeleteButtons();
+            }
+            else
+            {
+                DisableEditAndDeleteButtons();
+            }
+
         }
     }
 }
